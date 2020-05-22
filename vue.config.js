@@ -1,3 +1,6 @@
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin;
+
 module.exports = {
   "configureWebpack": {
     optimization: {
@@ -17,6 +20,7 @@ module.exports = {
         },
       },
     },
+    plugins: [new BundleAnalyzerPlugin()]
   },
   "transpileDependencies": [
     "vuetify"
