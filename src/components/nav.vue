@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-app-bar app clipped-left dense color="deep-purple" dark>
+    <v-app-bar app clipped-left dense :color="main_color" dark>
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
       <v-toolbar-title>Wefare</v-toolbar-title>
@@ -32,6 +32,11 @@
 export default {
   data: () => ({
     drawer: false
-  })
+  }),
+  computed: {
+    main_color() {
+      return this.$store.state.main_color;
+    }
+  }
 };
 </script>

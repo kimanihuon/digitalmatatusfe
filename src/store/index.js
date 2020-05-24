@@ -6,16 +6,16 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   strict: true,
   state: {
-    page: 1,
     page_count: 10,
-    gtfs: {}
+    gtfs: {},
+    main_color: "#1F7087"
   },
   mutations: {
-    changePage(state, payload){
-      state.page = payload
-    },
     changeGTFS(state, payload){
       state.gtfs[payload.name] = payload.data
+    },
+    updateRoute(state, route) {
+      state.gtfs.routes[route.index].trips = route.data;
     }
   },
   actions: {},
