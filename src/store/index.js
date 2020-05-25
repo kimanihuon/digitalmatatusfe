@@ -10,7 +10,9 @@ export default new Vuex.Store({
       { name: "Home", icon: "mdi-home", link: "/" },
       { name: "Routes", icon: "mdi-routes", link: "/routes" },
       { name: "Account", icon: "mdi-account", link: "/account" },
+      { name: "Login", icon: "mdi-login", link: "/login" }
     ],
+    auth: true,
     page_count: 10,
     pages_fetched: {},
     gtfs: {

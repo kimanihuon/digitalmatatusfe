@@ -20,7 +20,8 @@ Vue.use(VueRouter)
   {
     path: '/routes',
     name: 'Routes',
-    component: () => import(/* webpackChunkName: "routes" */ '../views/Routes.vue')
+    component: () => import(/* webpackChunkName: "routes" */ '../views/Routes.vue'),
+    props: true
   },
 
   {
@@ -28,6 +29,13 @@ Vue.use(VueRouter)
     name: 'Account',
     component: () => import(/* webpackChunkName: "account" */ '../views/Account.vue')
   },
+
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue')
+  },
+
 
 ]
 

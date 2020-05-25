@@ -1,8 +1,9 @@
 <template>
   <v-container>
     <v-row no-gutters class="px-2">
-      <v-col cols="6" sm="6" md="6">
 
+      <!-- Timeline section -->
+      <v-col cols="6" sm="6" md="6">
         <!-- Timeline -->
         <v-row no-gutters align="center">
           <v-icon color="blue" class="pl-3">{{ icons[1].name }}</v-icon>
@@ -20,13 +21,24 @@
           </v-col>
         </v-row>
       </v-col>
+
+      <!-- Fare Section -->
+      <v-col cols="6" sm="6" md="6" align="center">
+        <fare :edit="edit" />
+      </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
+import fare from "./fareBlock"
+
 export default {
   props: ["start_point", "stop"],
+
+  components: {
+    fare
+  },
 
   data() {
     return {
@@ -34,7 +46,8 @@ export default {
         { name: "mdi-checkbox-blank-circle" },
         { name: "mdi-circle-slice-8" },
         { name: "mdi-checkbox-blank-circle-outline" }
-      ]
+      ],
+      edit: false
     };
   },
 
