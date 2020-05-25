@@ -1,19 +1,19 @@
 <template>
   <v-container>
-    <v-sheet class="mx-auto" elevation="4" max-width="800">
+    <v-sheet class="mx-auto" elevation="4" max-width="900">
       <v-tabs v-model="tab" background-color="primary" dark centered>
-        <v-tab v-for="(item, i) in route.trips" :key="i">To: {{ item.trip_headsign }}</v-tab>
+        <v-tab v-for="(trip, i) in route.trips" :key="i">To: {{ trip.trip_headsign }}</v-tab>
       </v-tabs>
 
       <v-tabs-items v-model="tab">
-        <v-tab-item v-for="(item, i) in route.trips" :key="i">
+        <v-tab-item v-for="(trip, i) in route.trips" :key="i">
           <v-card flat>
-            <v-card-text> {{ item.trip_headsign }}, available: {{ item.service_id_id }}</v-card-text>
+            <v-card-text> Headsign: {{ trip.trip_headsign }}, Available: {{ trip.service_id_id }}. Total Stops: {{ trips[`direction${trip.direction_id}`].total_stops }}</v-card-text>
             <v-layout column class="list">
-              <div v-for="item in list" :key="item">
-                <points />
+              <div v-for="(stop, idx) in trips[`direction${trip.direction_id}`].stops" :key="idx">
+                <points :start_point="trips[`direction${trip.direction_id}`].start_point" :stop="stop" />
               </div>
-              <infinite-loading @infinite="infiniteHandler"></infinite-loading>
+              <infinite-loading @infinite="infiniteHandler($event, trip, i)"></infinite-loading>
             </v-layout>
           </v-card>
         </v-tab-item>
@@ -33,38 +33,56 @@ export default {
   data() {
     return {
       tab: null,
-      items: [
-        { tab: "One", content: "Tab 1 Content" },
-        { tab: "Two", content: "Tab 2 Content" }
-      ],
-      page: 1,
+      trips: {
+        "direction0": {},
+        "direction1": {}
+      },
       page_count: 10,
-      list: [],
-      api: "//hn.algolia.com/api/v1/search_by_date?tags=story"
+
     };
   },
   methods: {
-    infiniteHandler($state) {
-      // this.$http.get(
-      //   `${this.$url}/api/stops?page=${instance.page}&page_count=${instance.page_count}&route_id=${}`
-      // );
+    infiniteHandler($state, trip, trip_index) {
 
-      if (this.list.length > 200) {
-        $state.complete();
+      var instance = this;
+      var direction = trip.direction_id == "0" ? "direction0" : "direction1";
+      var start_point;
+
+      // Getting the trip start point
+      if (trip_index == 0) {
+        start_point = 1;
       } else {
-        setTimeout(() => {
-          var temp = [];
-          for (var i = this.list.length; i <= this.list.length + 10; i++) {
-            temp.push(i);
-          }
-
-          this.list.push(...temp);
-          $state.loaded();
-        }, 1000);
+        start_point = 0;
       }
+
+      if (!(instance.trips[direction].page > 0)) {
+        instance.trips[direction] = { page: 1, stops: [], stop_times: [], total_stops: 0, start_point: instance.route.trips[start_point]} 
+      }
+
+      this.$http.get(
+        `${this.$url}/api/stops?page=${instance.trips[direction].page}&page_count=${instance.page_count}&route_id=${instance.route.route_id}&trip_id=${trip.trip_id}`
+      ).then(function(response) {
+
+            if (response.data.info.stops.length > 1) {
+              instance.trips[direction].page += 1;
+              instance.trips[direction].stops.push(...response.data.info.stops);
+              instance.trips[direction].stop_times.push(...response.data.info.stop_times);
+              instance.trips[direction].total_stops = response.data.info.total_stops;
+              $state.loaded();
+              
+            } else {
+              $state.complete();
+            }
+          })
+          .catch(error => {
+            console.log(error)
+          });
     }
   },
-  created() {}
+  created() {},
+  mounted() {
+    console.log(this.trips)
+  }
 };
 </script>
 

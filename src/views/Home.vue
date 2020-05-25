@@ -13,8 +13,8 @@
         </v-toolbar>
         <v-card>
           <chips />
-          <tabs v-if="trips_fetch_success" :route="active_route" />
           <progressIndicator v-if="fetching_trips" />
+          <tabs v-if="trips_fetch_success && !fetching_trips" :route="active_route" />
         </v-card>
       </v-dialog>
     </v-row>
@@ -72,8 +72,8 @@ export default {
   methods: {
     popup(args, idx) {
       this.active_route = args;
-      this.dialog = true;
       this.fetch_trips(args, idx);
+      this.dialog = true;
     },
     fetch_trips(active_route, idx) {
       var instance = this;
@@ -98,6 +98,7 @@ export default {
           });
       } else {
         instance.trips_fetch_success = true;
+        this.fetching_trips = false;
       }
     }
   },

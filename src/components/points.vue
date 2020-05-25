@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row no-gutters class="px-2">
-      <v-col cols="6" sm="6" md="4">
+      <v-col cols="6" sm="6" md="6">
 
         <!-- Timeline -->
         <v-row no-gutters align="center">
@@ -13,10 +13,10 @@
         <!-- Stop names -->
         <v-row no-gutters justify="space-around" class="py-1">
           <v-col align="start">
-            <p>Kikuyu</p>
+            <p> {{ start_point.trip_headsign }} </p>
           </v-col>
           <v-col align="end">
-            <p>Odeon</p>
+            <p> {{ stop.stop_name }} </p>
           </v-col>
         </v-row>
       </v-col>
@@ -26,6 +26,8 @@
 
 <script>
 export default {
+  props: ["start_point", "stop"],
+
   data() {
     return {
       icons: [
@@ -34,6 +36,11 @@ export default {
         { name: "mdi-checkbox-blank-circle-outline" }
       ]
     };
+  },
+
+  mounted() {
+    
   }
+
 };
 </script>
