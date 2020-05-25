@@ -15,7 +15,20 @@ Vue.use(VueRouter)
     name: 'About',
     // route level code-splitting
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
+  },
+
+  {
+    path: '/routes',
+    name: 'Routes',
+    component: () => import(/* webpackChunkName: "routes" */ '../views/Routes.vue')
+  },
+
+  {
+    path: '/account',
+    name: 'Account',
+    component: () => import(/* webpackChunkName: "account" */ '../views/Account.vue')
+  },
+
 ]
 
 const router = new VueRouter({

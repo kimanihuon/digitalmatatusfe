@@ -6,16 +6,26 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   strict: true,
   state: {
+    pages: [
+      { name: "Home", icon: "mdi-home", link: "/" },
+      { name: "Routes", icon: "mdi-routes", link: "/routes" },
+      { name: "Account", icon: "mdi-account", link: "/account" },
+    ],
     page_count: 10,
-    gtfs: {},
+    pages_fetched: {},
+    gtfs: {
+      routes: {}
+    },
     main_color: "#1F7087"
   },
   mutations: {
-    changeGTFS(state, payload){
-      state.gtfs[payload.name] = payload.data
+    addRoutes(state, payload){
+      state.gtfs.routes[payload.page] = [];
+      state.gtfs.routes[payload.page] = payload.data;
+      state.gtfs.total_routes = payload.total;
     },
     updateRoute(state, route) {
-      state.gtfs.routes[route.index].trips = route.data;
+      state.gtfs.routes[`p${route.page_number}`][route.block_index].trips = route.data;
     }
   },
   actions: {},
