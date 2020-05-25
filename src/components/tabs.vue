@@ -81,7 +81,7 @@ export default {
   },
   created() {},
   mounted() {
-    console.log(this.trips)
+    
   }
 };
 </script>
