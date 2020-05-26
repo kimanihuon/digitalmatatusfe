@@ -46,14 +46,18 @@
 
 <script>
 export default {
-  data: () => ({
-    edit: false,
-    changed: false,
-    val: 0,
-    oldVal: 0,
-    min: 0,
-    max: 300
-  }),
+  props: ["fare"],
+
+  data() {
+    return {
+      edit: false,
+      changed: false,
+      val: this.fare ? this.fare.price : 0,
+      oldVal: 0,
+      min: 0,
+      max: 300
+    };
+  },
 
   methods: {
     toggle() {
@@ -74,16 +78,17 @@ export default {
     focus() {
       this.oldVal = this.val;
     }
-  }
+  },
+  mounted(){}
 };
 </script>
 
 <style>
 /* Chrome, Safari, Edge, Opera */
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-  -webkit-appearance: none; 
-  margin: 0; 
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 /* Firefox */

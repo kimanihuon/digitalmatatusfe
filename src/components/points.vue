@@ -24,7 +24,7 @@
 
       <!-- Fare Section -->
       <v-col cols="6" sm="6" md="6" align="center">
-        <fare :edit="edit" />
+        <fare :fare="fare"/>
       </v-col>
     </v-row>
   </v-container>
@@ -34,7 +34,7 @@
 import fare from "./fareBlock"
 
 export default {
-  props: ["start_point", "stop"],
+  props: ["start_point", "stop", "fare"],
 
   components: {
     fare
@@ -47,7 +47,6 @@ export default {
         { name: "mdi-circle-slice-8" },
         { name: "mdi-checkbox-blank-circle-outline" }
       ],
-      edit: false
     };
   },
 
