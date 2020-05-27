@@ -3,7 +3,7 @@
     <v-app-bar app clipped-left dense :color="main_color" dark>
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
-      <v-toolbar-title>Wefare</v-toolbar-title>
+      <v-toolbar-title>Digimatt</v-toolbar-title>
     </v-app-bar>
 
     <v-navigation-drawer v-model="drawer" app clipped>

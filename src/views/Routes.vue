@@ -80,6 +80,18 @@ function fetch_routes(instance) {
 export default {
   name: "Home",
 
+  metaInfo() {
+    return {
+      title: "Routes",
+      titleTemplate: "%s | Digitmatt Routes page",
+      meta: [
+        { charset: "utf-8" },
+        { name: "description", content: "Digimatt Routes and fares" },
+        { name: "viewport", content: "width=device-width, initial-scale=1" }
+      ]
+    };
+  },
+
   components: {
     block,
     chips,

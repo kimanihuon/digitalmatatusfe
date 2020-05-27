@@ -1,5 +1,11 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import VueMeta from 'vue-meta'
+
+Vue.use(VueMeta, {
+  keyName: 'metaInfo',
+  refreshOnceOnNavigation: true
+})
 
 Vue.use(VueRouter)
 
@@ -33,7 +39,15 @@ Vue.use(VueRouter)
   {
     path: '/login',
     name: 'Login',
-    component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue')
+    component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue'),
+    children: [
+      {
+        name: 'contribute',
+        path: 'contribute',
+        component: () => import('../views/Login.vue'),
+        props: true
+      }
+    ]
   },
 
 
@@ -42,6 +56,7 @@ Vue.use(VueRouter)
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
+  saveScrollPosition: true,
   routes
 })
 

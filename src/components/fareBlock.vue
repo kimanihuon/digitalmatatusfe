@@ -1,5 +1,28 @@
 <template>
   <div>
+    <!-- Login component dialog -->
+    <v-row justify="center">
+      <v-dialog v-model="dialog" max-width="800">
+        <v-card color="grey">
+
+          <!-- Close button -->
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="red darken-1" outlined icon @click="close()">
+              <v-icon>
+                mdi-close
+              </v-icon>
+            </v-btn>
+          </v-card-actions>
+
+          <!-- Login component -->
+          <div v-if="dialog">
+            <login />
+          </div>
+        </v-card>
+      </v-dialog>
+    </v-row>
+
     <!-- Main -->
     <v-row no-gutters align="center" justify="center">
       <!-- Size control -->
@@ -31,6 +54,7 @@
             <v-btn color="#1B5E20" class="ml-1 my-1" icon outlined small dark @click="submit()">
               <v-icon small>mdi-upload-outline</v-icon>
             </v-btn>
+
             <v-btn color="#B71C1C" class="ml-1" icon outlined small dark @click="discard()">
               <v-icon small>mdi-cancel</v-icon>
             </v-btn>
@@ -42,8 +66,14 @@
 </template>
 
 <script>
+import login from "../components/login";
+
 export default {
   props: ["fare"],
+
+  components: {
+    login
+  },
 
   data() {
     return {
@@ -52,7 +82,8 @@ export default {
       val: this.fare ? this.fare.price : 0,
       oldVal: 0,
       min: 0,
-      max: 300
+      max: 300,
+      dialog: false
     };
   },
 
@@ -64,6 +95,10 @@ export default {
       this.val = this.oldVal;
       this.changed = false;
       this.edit = !this.edit;
+
+      if (!this.$store.state.auth) {
+        this.dialog = true;
+      }
     },
     discard() {
       this.val = this.oldVal;
@@ -75,6 +110,9 @@ export default {
     },
     focus() {
       this.oldVal = this.val;
+    },
+    close() {
+      this.dialog = false;
     }
   },
   mounted() {},

@@ -1,40 +1,123 @@
 <template>
   <v-container>
-    <v-row no-gutters>
-      <v-col align="center" justify="center">
-        <v-card class="overflow-hidden" color="purple lighten-1" dark>
-          <v-toolbar flat color="purple">
-            <v-icon>mdi-account</v-icon>
-            <v-toolbar-title class="font-weight-light">User Profile</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-btn color="purple darken-3" fab small @click="isEditing = !isEditing">
-              <v-icon v-if="isEditing">mdi-close</v-icon>
-              <v-icon v-else>mdi-pencil</v-icon>
-            </v-btn>
-          </v-toolbar>
-          <v-card-text>
-            <v-text-field :disabled="!isEditing" color="white" label="Name"></v-text-field>
-            <v-autocomplete
-              :disabled="!isEditing"
-              :items="states"
-              :filter="customFilter"
-              color="white"
-              item-text="name"
-              label="State"
-            ></v-autocomplete>
-          </v-card-text>
-          <v-divider></v-divider>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn :disabled="!isEditing" color="success" @click="save">Save</v-btn>
-          </v-card-actions>
-          <v-snackbar
-            v-model="hasSaved"
-            :timeout="2000"
-            absolute
-            bottom
-            left
-          >Your profile has been updated</v-snackbar>
+    <v-row no-gutters justify="space-around">
+      <!-- User details -->
+      <v-col cols="12" sm="12" md="7" class="pa-0 mt-4 mb-2">
+        <v-card class="px-3" shaped elevation="10">
+          <v-form v-model="valid">
+            <v-col>
+              <!-- Profile edit -->
+              <v-row>
+                <v-card-subtitle class="font-weight-medium">Edit profile</v-card-subtitle>
+              </v-row>
+
+              <!-- First row names -->
+              <v-row>
+                <v-col cols="12" sm="6">
+                  <v-text-field
+                    v-model="firstname"
+                    :rules="nameRules"
+                    :counter="10"
+                    required
+                    outlined
+                    dense
+                    append-icon="mdi-account-box-outline"
+                  ></v-text-field>
+                </v-col>
+
+                <v-col cols="12" sm="6">
+                  <v-text-field
+                    v-model="phone"
+                    :rules="nameRules"
+                    :counter="10"
+                    required
+                    outlined
+                    dense
+                    append-icon="mdi-account-box-outline"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+
+              <!-- Second row E mail -->
+              <v-row justify="center">
+                <v-col cols="12" sm="8">
+                  <v-text-field
+                    v-model="email"
+                    :rules="emailRules"
+                    required
+                    outlined
+                    disabled
+                    dense
+                    append-icon="mdi-email-outline"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+
+              <!-- Third row Designations -->
+              <v-row justify="center">
+                <v-col cols="12" md="6" class="pb-0">
+                  <v-text-field
+                    v-model="tagline"
+                    label="Tagline"
+                    required
+                    outlined
+                    dense
+                    color="blue"
+                    append-icon="mdi-tag-heart"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+
+              <!-- Text area -->
+              <v-row>
+                <v-col cols="12" class="pb-0">
+                  <v-textarea label="About" v-model="about" outlined background-color="#E3F2FD"></v-textarea>
+                </v-col>
+              </v-row>
+
+              <v-divider></v-divider>
+
+              <!-- Save button -->
+              <v-row>
+                <v-col class="mt-2" align="end">
+                  <v-btn color="primary">
+                    <v-icon left>mdi-content-save</v-icon>save
+                  </v-btn>
+                </v-col>
+              </v-row>
+            </v-col>
+          </v-form>
+        </v-card>
+      </v-col>
+
+      <!-- Profile section -->
+      <v-col cols="12" sm="6" md="4" class="pa-0 mt-4 mb-2">
+        <v-card elevation="10">
+          <v-row no-gutters>
+            <v-col align="center">
+              <!-- Profile with hover effect -->
+              <v-hover>
+                <template v-slot:default="{ hover }">
+                  <v-avatar class="profile mt-4" color="grey" size="150">
+                    <v-img src="@/assets/user.svg"></v-img>
+                    <v-fade-transition>
+                      <v-overlay v-if="hover" absolute color="#036358">
+                        <!-- Implement picture upload -->
+                        <v-btn fab text>
+                          <v-icon>mdi-image-edit</v-icon>
+                        </v-btn>
+                      </v-overlay>
+                    </v-fade-transition>
+                  </v-avatar>
+                </template>
+              </v-hover>
+
+              <v-card-subtitle class="pb-0 title">{{ firstname }}</v-card-subtitle>
+
+              <v-card-subtitle class="pt-1 subtitle-1">{{ tagline }}</v-card-subtitle>
+              <v-card-text>{{ about }}</v-card-text>
+            </v-col>
+          </v-row>
         </v-card>
       </v-col>
     </v-row>
@@ -42,36 +125,41 @@
 </template>
 
 <script>
-  export default {
-    data () {
-      return {
-        hasSaved: false,
-        isEditing: null,
-        model: null,
-        states: [
-          { name: 'Florida', abbr: 'FL', id: 1 },
-          { name: 'Georgia', abbr: 'GA', id: 2 },
-          { name: 'Nebraska', abbr: 'NE', id: 3 },
-          { name: 'California', abbr: 'CA', id: 4 },
-          { name: 'New York', abbr: 'NY', id: 5 },
-        ],
-      }
-    },
+export default {
+  metaInfo() {
+    return {
+      title: "Profile",
+      titleTemplate: "%s | Digitmatt profile page",
+      meta: [
+        { charset: "utf-8" },
+        { name: "description", content: "Digimatt profile" },
+        { name: "viewport", content: "width=device-width, initial-scale=1" }
+      ]
+    };
+  },
 
-    methods: {
-      customFilter (item, queryText, itemText) {
-          itemText
-        const textOne = item.name.toLowerCase()
-        const textTwo = item.abbr.toLowerCase()
-        const searchText = queryText.toLowerCase()
-
-        return textOne.indexOf(searchText) > -1 ||
-          textTwo.indexOf(searchText) > -1
-      },
-      save () {
-        this.isEditing = !this.isEditing
-        this.hasSaved = true
-      },
-    },
-  }
+  data: () => ({
+    hover: false,
+    valid: false,
+    firstname: "Ellon Musk",
+    phone: "0700000000",
+    tagline: "Best of myself",
+    about: "Very cool user",
+    nameRules: [
+      v => !!v || "Name is required",
+      v => v.length <= 10 || "Name must be less than 10 characters"
+    ],
+    email: "boom",
+    emailRules: [
+      v => !!v || "E-mail is required",
+      v => /.+@.+/.test(v) || "E-mail must be valid"
+    ]
+  })
+};
 </script>
+
+<style lang="scss" scoped>
+.img {
+  border-radius: 1.5%;
+}
+</style>

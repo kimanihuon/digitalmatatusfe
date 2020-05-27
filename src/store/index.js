@@ -6,13 +6,14 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   strict: true,
   state: {
+    userDetails: {},
     pages: [
       { name: "Home", icon: "mdi-home", link: "/" },
       { name: "Routes", icon: "mdi-routes", link: "/routes" },
       { name: "Account", icon: "mdi-account", link: "/account" },
       { name: "Login", icon: "mdi-login", link: "/login" }
     ],
-    auth: true,
+    auth: false,
     page_count: 10,
     pages_fetched: {},
     gtfs: {
@@ -48,6 +49,12 @@ export default new Vuex.Store({
     },
     updateSelection(state, value) {
       state.periods.selection = value
+    },
+    setUserDetails(state, details) {
+      state.userDetails = details;
+    },
+    switchAuth(state, value) {
+      state.auth = value;
     }
   },
   actions: {},
