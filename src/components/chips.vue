@@ -1,36 +1,50 @@
 <template>
   <v-container>
-    <v-sheet class="mx-auto" elevation="4" max-width="800">
-      <v-slide-group show-arrows class="pa-4">
-        <v-slide-item v-for="(option, i) in tags" :key="i" v-slot:default="{ active, toggle }">
-          <v-btn
-            small
-            class="mx-2"
-            :input-value="active"
-            active-class="purple white--text"
-            depressed
-            rounded
-            @click="toggle"
-          >{{ option }}</v-btn>
-        </v-slide-item>
-      </v-slide-group>
+    <v-sheet class="mx-auto py-4" elevation="5" max-width="600">
+      <v-chip-group
+        v-model="selection"
+        show-arrows
+        mandatory
+        active-class="primary--text"
+      >
+        <v-chip v-for="tag in tags" :key="tag">{{ tag }}</v-chip>
+      </v-chip-group>
     </v-sheet>
   </v-container>
 </template>
 
 <script>
 export default {
-  data: () => ({
-    tags: [
-      "Off-peak",
-      "Morning",
-      "Afternoon",
-      "Evening",
-      "6:00 - 9:00",
-      "9:00 - 12:00",
-      "12:00 - 3:00",
-      "3:00 - 6:00"
-    ]
-  })
+  data() {
+    return {
+      tags: [
+        "Current Time",
+        "6:00 - 7:00",
+        "7:00 - 8:00",
+        "8:00 - 9:00",
+        "9:00 - 10:00",
+        "10:00 - 11:00",
+        "11:00 - 1:00",
+        "1:00 - 2:00",
+        "2:00 - 3:00",
+        "3:00 - 4:00",
+        "4:00 - 5:00",
+        "5:00 - 6:00"
+      ]
+    };
+  },
+  computed: {
+    selection: {
+      get() {
+        return this.$store.state.periods.selection;
+      },
+      set(value) {
+        this.$store.commit("updateSelection", value);
+      }
+    }
+  },
+  methods: {
+  },
+  mounted() {}
 };
 </script>

@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <!-- Dialog elements -->
-    <v-row no-gutters>
+    <v-row no-gutters v-if="dialog">
       <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
         <v-toolbar dense dark :color="main_color">
           <v-btn icon dark @click="dialog = false">

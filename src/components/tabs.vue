@@ -14,7 +14,7 @@
                 <points
                   :start_point="trips[`direction${trip.direction_id}`].start_point"
                   :stop="stop"
-                  :fare="fares[stop.stop_id]"
+                  :fare="fare(stop.stop_id)"
                 />
               </div>
               <infinite-loading @infinite="infiniteHandler($event, trip, i)"></infinite-loading>
@@ -31,6 +31,10 @@ import points from "./points";
 
 function updateFaresCache(list, instance) {
   for (let i = 0; i < list.length; i++) {
+    var fare = {};
+    fare[list[i].destination_id] = list[i];
+    instance.periods[list[i].period] = fare;
+
     instance.fares[list[i].destination_id] = list[i];
   }
 }
@@ -43,9 +47,12 @@ export default {
   data() {
     return {
       tab: null,
-
       // Cached fares
       fares: {},
+      periods: {},
+      current_period: this.$store.state.periods.tags[
+        this.$store.state.periods["selection"]
+      ],
       trips: {
         direction0: {},
         direction1: {}
@@ -53,7 +60,17 @@ export default {
       page_count: 10
     };
   },
+  computed: {},
   methods: {
+    fare(stop_id) {
+      var periodHasFares = this.periods[this.current_period];
+      // console.log(this.current_period);
+      if (periodHasFares) {
+        return periodHasFares[stop_id];
+      } else {
+        return;
+      }
+    },
     infiniteHandler($state, trip, trip_index) {
       var instance = this;
       var direction = trip.direction_id == "0" ? "direction0" : "direction1";
@@ -101,7 +118,13 @@ export default {
     }
   },
   created() {},
-  mounted() {}
+  mounted() {
+    this.$store.subscribe((mutation, state) => {
+      if (mutation.type === "updateSelection") {
+        this.current_period = state.periods.tags[state.periods.selection];
+      }
+    });
+  }
 };
 </script>
 
