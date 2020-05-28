@@ -13,8 +13,11 @@
               <div v-for="(stop, idx) in trips[`direction${trip.direction_id}`].stops" :key="idx">
                 <points
                   :start_point="trips[`direction${trip.direction_id}`].start_point"
+                  :start_point_id="trips[`direction${trip.direction_id}`].stops[0].stop_id"
                   :stop="stop"
                   :fare="fare(stop.stop_id)"
+                  :route_id="route.route_id"
+                  :period="current_period"
                 />
               </div>
               <infinite-loading @infinite="infiniteHandler($event, trip, i)"></infinite-loading>
@@ -89,7 +92,7 @@ export default {
           stops: [],
           stop_times: [],
           total_stops: 0,
-          start_point: instance.route.trips[start_point]
+          start_point: instance.route.trips[start_point],
         };
       }
 
@@ -104,8 +107,8 @@ export default {
             instance.trips[direction].stop_times.push(
               ...response.data.info.stop_times
             );
-            instance.trips[direction].total_stops =
-              response.data.info.total_stops;
+            instance.trips[direction].total_stops = response.data.info.total_stops;
+
             updateFaresCache(response.data.info.fares, instance);
             $state.loaded();
           } else {
@@ -124,6 +127,7 @@ export default {
         this.current_period = state.periods.tags[state.periods.selection];
       }
     });
+
   }
 };
 </script>

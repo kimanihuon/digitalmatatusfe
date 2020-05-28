@@ -1,14 +1,14 @@
 <template>
-  <v-container class="fill-height d-flex justify-center align-center">
+  <v-container>
     <!-- Main login form -->
     <div v-if="!auth">
       <!-- Warning message -->
       <v-dialog v-model="dialog" max-width="290">
         <v-card>
-          <v-card-text
-            class="pt-4 red--text"
-          >Ooops! Something happened. Please try again.
-          Error: {{ requestResponse }}</v-card-text>
+          <v-card-text class="pt-4 red--text">
+            Ooops! Something happened. Please try again.
+            Error: {{ requestResponse }}
+          </v-card-text>
 
           <v-card-actions>
             <v-spacer></v-spacer>
@@ -28,7 +28,6 @@
 
         <v-form ref="form" v-model="valid" lazy-validation>
           <v-row no-gutters class="px-6 pt-6">
-
             <!-- Email -->
             <v-col cols="12" class="mt-2">
               <v-text-field
@@ -52,8 +51,6 @@
                 prepend-inner-icon="mdi-account"
               ></v-text-field>
             </v-col>
-
-            
 
             <!-- Password -->
             <v-col cols="12" :class="signup ? 'move' : 'moveback'">
@@ -123,7 +120,7 @@
           </v-row>
         </v-form>
 
-        <v-col align="center" class="mt-5">
+        <v-col align="center" class="mt-3">
           <div>
             <GoogleLogin
               id="my-signin2"
@@ -138,14 +135,15 @@
       </v-card>
     </div>
 
-    <div v-if="auth">
-      <v-row no-gutters>
-        <v-col justify="center" align="center">
-          <v-img src="@/assets/button.svg" alt="Logged in" class="img" max-height="550"></v-img>
+    <!-- Image for when logged in -->
+    <v-row v-if="auth" no-gutters>
+      <v-col justify="center" align="center">
+        <div>
+          <v-img src="@/assets/button.svg" alt="Logged in" class="img" width="200"></v-img>
           <p class="display-2 py-2">Logged In</p>
-        </v-col>
-      </v-row>
-    </div>
+        </div>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -156,6 +154,8 @@ import GoogleLogin from "vue-google-login";
 
 export default {
   name: "login",
+
+  props: ["contribution"],
 
   components: {
     GoogleLogin
@@ -252,6 +252,10 @@ export default {
               // console.log(response.data.user)
               instance.$store.commit("switchAuth", true);
               instance.$store.commit("setUserDetails", response.data.user);
+
+              if (instance.contribution) {
+                instance.$emit("success", true);
+              }
             } else {
               instance.dialog = true;
             }
@@ -276,7 +280,7 @@ export default {
     },
 
     onFailure(fail) {
-      console.log(fail)
+      console.log(fail);
     },
 
     register() {

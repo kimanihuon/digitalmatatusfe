@@ -24,7 +24,7 @@
 
       <!-- Fare Section -->
       <v-col cols="6" sm="6" md="6" align="center">
-        <fare :fare="fare"/>
+        <fare :fare="fare" :start_point_id="start_point_id" :stop_id="stop.stop_id" :route_id="route_id" :period="period"/>
       </v-col>
     </v-row>
   </v-container>
@@ -34,7 +34,7 @@
 import fare from "./fareBlock"
 
 export default {
-  props: ["start_point", "stop", "fare"],
+  props: ["start_point", "start_point_id", "stop", "fare", "route_id", "period"],
 
   components: {
     fare

@@ -50,6 +50,12 @@ export default new Vuex.Store({
     updateSelection(state, value) {
       state.periods.selection = value
     },
+    updateProfile(state, payload) {
+      state.userDetails.name = payload.name;
+      state.userDetails.phone = payload.phone;
+      state.userDetails.tagline = payload.tagline;
+      state.userDetails.about = payload.about;
+    },
     setUserDetails(state, details) {
       state.userDetails = details;
     },

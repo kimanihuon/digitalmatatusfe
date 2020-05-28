@@ -1,5 +1,21 @@
 <template>
   <div>
+    <v-dialog v-model="dialog" max-width="290">
+      <v-card>
+        <v-card-text class="pt-4 red--text">
+          Ooops! Something happened. Please try again.
+          Error: {{ requestResponse }}
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn icon color="red darken-1" text @click="dialog = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <v-app-bar app clipped-left dense :color="main_color" dark>
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
@@ -32,7 +48,9 @@
 <script>
 export default {
   data: () => ({
-    drawer: false
+    drawer: false,
+    dialog: false,
+    requestResponse: ""
   }),
   computed: {
     pages() {
@@ -43,7 +61,29 @@ export default {
     }
   },
   methods: {
-    logout() {}
+    logout() {
+      var instance = this;
+
+      this.$http
+        .create({ withCredentials: true })
+        .post(`${this.$api}/api/logout`)
+        .then(function(response) {
+          if (response.data.success === true) {
+            instance.$store.commit("switchAuth", false);
+          } else {
+            this.dialog = true;
+            this.requestResponse =
+              "Cannot logout, server configuration error. Try clearing your cookies" +
+              response.data.message;
+          }
+        })
+        .catch(function(error) {
+          // console.log(error)
+          error;
+          this.dialog = true;
+          this.requestResponse = "Cannot logout, Browser error. Try clearing your cookies instead";
+        });
+    }
   }
 };
 </script>

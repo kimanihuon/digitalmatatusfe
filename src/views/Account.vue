@@ -1,10 +1,10 @@
 <template>
-  <v-container>
-    <v-row no-gutters justify="space-around">
+  <v-container class="fill-height">
+    <v-row v-if="auth" no-gutters justify="space-around">
       <!-- User details -->
       <v-col cols="12" sm="12" md="7" class="pa-0 mt-4 mb-2">
         <v-card class="px-3" shaped elevation="10">
-          <v-form v-model="valid">
+          <v-form v-model="valid" ref="form">
             <v-col>
               <!-- Profile edit -->
               <v-row>
@@ -15,9 +15,9 @@
               <v-row>
                 <v-col cols="12" sm="6">
                   <v-text-field
-                    v-model="firstname"
+                    v-model="name"
                     :rules="nameRules"
-                    :counter="10"
+                    :counter="20"
                     required
                     outlined
                     dense
@@ -28,8 +28,8 @@
                 <v-col cols="12" sm="6">
                   <v-text-field
                     v-model="phone"
-                    :rules="nameRules"
-                    :counter="10"
+                    :rules="phoneRules"
+                    :counter="13"
                     required
                     outlined
                     dense
@@ -59,6 +59,8 @@
                   <v-text-field
                     v-model="tagline"
                     label="Tagline"
+                    :rules="taglineRules"
+                    :counter="50"
                     required
                     outlined
                     dense
@@ -68,10 +70,17 @@
                 </v-col>
               </v-row>
 
-              <!-- Text area -->
+              <!-- About area -->
               <v-row>
                 <v-col cols="12" class="pb-0">
-                  <v-textarea label="About" v-model="about" outlined background-color="#E3F2FD"></v-textarea>
+                  <v-textarea
+                    :rules="aboutRules"
+                    :counter="100"
+                    label="About"
+                    v-model="about"
+                    outlined
+                    background-color="#E3F2FD"
+                  ></v-textarea>
                 </v-col>
               </v-row>
 
@@ -79,9 +88,16 @@
 
               <!-- Save button -->
               <v-row>
-                <v-col class="mt-2" align="end">
-                  <v-btn color="primary">
-                    <v-icon left>mdi-content-save</v-icon>save
+                <v-col class="mt-2" align="center">
+                  <v-btn
+                    :loading="loading"
+                    :color="success ? 'success' : 'primary'"
+                    @click="success ? null : save()"
+                  >
+                    <v-icon
+                      left
+                    >{{ success ? 'mdi-checkbox-marked-circle-outline' : 'mdi-content-save' }}</v-icon>
+                    {{ success ? 'saved' : 'save' }}
                   </v-btn>
                 </v-col>
               </v-row>
@@ -112,13 +128,19 @@
                 </template>
               </v-hover>
 
-              <v-card-subtitle class="pb-0 title">{{ firstname }}</v-card-subtitle>
+              <v-card-subtitle class="pb-0 title">{{ name }}</v-card-subtitle>
 
               <v-card-subtitle class="pt-1 subtitle-1">{{ tagline }}</v-card-subtitle>
               <v-card-text>{{ about }}</v-card-text>
             </v-col>
           </v-row>
         </v-card>
+      </v-col>
+    </v-row>
+    <v-row v-if="!auth" no-gutters justify="center">
+      <v-col align="center" justify="center">
+        <v-img src="@/assets/hello.svg" width="300"></v-img>
+        <v-card-title class="justify-center">Please login to view profile</v-card-title>
       </v-col>
     </v-row>
   </v-container>
@@ -138,23 +160,95 @@ export default {
     };
   },
 
-  data: () => ({
-    hover: false,
-    valid: false,
-    firstname: "Ellon Musk",
-    phone: "0700000000",
-    tagline: "Best of myself",
-    about: "Very cool user",
-    nameRules: [
-      v => !!v || "Name is required",
-      v => v.length <= 10 || "Name must be less than 10 characters"
-    ],
-    email: "boom",
-    emailRules: [
-      v => !!v || "E-mail is required",
-      v => /.+@.+/.test(v) || "E-mail must be valid"
-    ]
-  })
+  data() {
+    return {
+      userDetails: {},
+      hover: false,
+      valid: true,
+      loading: false,
+      success: false,
+      auth: this.$store.state.auth,
+      name: this.$store.state.userDetails.name
+        ? JSON.parse(JSON.stringify(this.$store.state.userDetails.name))
+        : "",
+      phone: this.$store.state.userDetails.phone
+        ? JSON.parse(JSON.stringify(this.$store.state.userDetails.phone))
+        : "",
+      tagline: this.$store.state.userDetails.tagline
+        ? JSON.parse(JSON.stringify(this.$store.state.userDetails.tagline))
+        : "",
+      about: this.$store.state.userDetails.about
+        ? JSON.parse(JSON.stringify(this.$store.state.userDetails.about))
+        : "",
+      email: this.$store.state.userDetails.email
+        ? JSON.parse(JSON.stringify(this.$store.state.userDetails.email))
+        : "",
+      taglineRules: [
+        v => !!v || "Tagline is required",
+        v => v.length <= 50 || "Tagline must be less than 50 characters"
+      ],
+      aboutRules: [
+        v => !!v || "About is required",
+        v => v.length <= 50 || "About must be less than 100 characters"
+      ],
+      nameRules: [
+        v => !!v || "Name is required",
+        v => v.length <= 20 || "Name must be less than 20 characters"
+      ],
+      phoneRules: [
+        v => !!v || "Phone is required",
+        v => v.length <= 13 || "Phone must be less than 13 characters"
+      ],
+      emailRules: [
+        v => !!v || "E-mail is required",
+        v => /.+@.+/.test(v) || "E-mail must be valid"
+      ]
+    };
+  },
+  methods: {
+    save() {
+      if (!this.$refs.form.validate()) {
+        return;
+      }
+
+      this.loading = true;
+      var instance = this;
+      var fields = {
+        name: this.name,
+        tagline: this.tagline,
+        phone: this.phone,
+        about: this.about
+      };
+      this.$http
+        .create({ withCredentials: true })
+        .post(`${this.$auth}/api/update`, {
+          fields: fields
+        })
+        .then(
+          res => {
+            instance.loading = false;
+            if (res.data.success) {
+              instance.$store.commit("updateProfile", fields);
+              instance.success = true;
+              setTimeout(function() {
+                instance.success = false;
+              }, 3000);
+            } else {
+              instance.loading = false;
+              instance.dialog = true;
+            }
+          },
+          err => {
+            this.loading = false;
+            this.dialog = true;
+            console.log(err);
+          }
+        );
+    }
+  },
+  mounted() {
+    // console.log(this.$store.state.userDetails);
+  }
 };
 </script>
 

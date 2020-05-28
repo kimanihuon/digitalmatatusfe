@@ -146,6 +146,8 @@ export default {
       }
     },
     pagination(number) {
+
+      // If the route hasn't already been fetched
       if (!this.$store.state.gtfs.routes[`p${number}`]) {
         fetch_routes(this);
         console.log(`Page: ${number} fetched successfully`);

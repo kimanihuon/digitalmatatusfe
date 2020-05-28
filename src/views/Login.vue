@@ -1,7 +1,9 @@
 <template>
-  <div>
-    <login />
-  </div>
+  <v-container>
+    <div>
+      <login />
+    </div>
+  </v-container>
 </template>
 
 <script>
