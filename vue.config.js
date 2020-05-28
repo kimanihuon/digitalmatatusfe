@@ -20,7 +20,12 @@ module.exports = {
         },
       },
     },
-    plugins: [new BundleAnalyzerPlugin()]
+    // plugins: [new BundleAnalyzerPlugin()]
+  },
+  pluginOptions: {
+    webpackBundleAnalyzer: {
+      openAnalyzer: false
+    }
   },
   "transpileDependencies": [
     "vuetify"
