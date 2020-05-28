@@ -2,10 +2,15 @@
   <div>
     <v-dialog v-model="dialog" max-width="290">
       <v-card>
-        <v-card-text class="pt-4 red--text">
+        <v-card-text v-if="!logoutSuccess" class="pt-4 red--text" title>
           Ooops! Something happened. Please try again.
           Error: {{ requestResponse }}
         </v-card-text>
+      
+        <v-card-subtitle v-if="logoutSuccess" class="pt-4 green--text title">
+          Logout successfull.
+          See you soon!!!!
+        </v-card-subtitle>
 
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -50,7 +55,8 @@ export default {
   data: () => ({
     drawer: false,
     dialog: false,
-    requestResponse: ""
+    requestResponse: "",
+    logoutSuccess: false
   }),
   computed: {
     pages() {
@@ -66,12 +72,16 @@ export default {
 
       this.$http
         .create({ withCredentials: true })
-        .post(`${this.$api}/api/logout`)
+        .post(`${this.$auth}/api/logout`)
         .then(function(response) {
           if (response.data.success === true) {
+            instance.dialog = true;
+            instance.logoutSuccess = true;
             instance.$store.commit("switchAuth", false);
+            instance.drawer = false;
           } else {
             this.dialog = true;
+            instance.logoutSuccess = false;
             this.requestResponse =
               "Cannot logout, server configuration error. Try clearing your cookies" +
               response.data.message;
@@ -81,6 +91,7 @@ export default {
           // console.log(error)
           error;
           this.dialog = true;
+          instance.logoutSuccess = false;
           this.requestResponse = "Cannot logout, Browser error. Try clearing your cookies instead";
         });
     }

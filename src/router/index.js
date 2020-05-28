@@ -40,14 +40,6 @@ Vue.use(VueRouter)
     path: '/login',
     name: 'Login',
     component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue'),
-    children: [
-      {
-        name: 'contribute',
-        path: 'contribute',
-        component: () => import('../views/Login.vue'),
-        props: true
-      }
-    ]
   },
 
 
