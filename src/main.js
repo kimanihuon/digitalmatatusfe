@@ -9,7 +9,7 @@ import InfiniteLoading from 'vue-infinite-loading';
 
 Vue.use(InfiniteLoading, { /* options */ });
 
-Vue.prototype.$url = (process.env.VUE_APP_ENV ? 'http://localhost:9443' : 'https://weskool.team:8000' );
+Vue.prototype.$url = (process.env.VUE_APP_ENV ? 'http://localhost:8000' : 'https://weskool.team:9443' );
 Vue.prototype.$auth = (process.env.VUE_APP_ENV ? 'http://localhost:6443' : 'https://weskool.team:6443' );
 Vue.prototype.$client_id = (process.env.VUE_APP_CLIENT_ID);
 Vue.prototype.$http = axios;
