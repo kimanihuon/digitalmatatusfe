@@ -313,6 +313,10 @@ export default {
             if (response.data.success) {
               instance.$store.commit("switchAuth", true);
               instance.$store.commit("setUserDetails", response.data.user);
+              
+              if (instance.contribution) {
+                instance.$emit("success", true);
+              }
             }
             // console.log(response);
           },
