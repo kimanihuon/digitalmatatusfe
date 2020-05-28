@@ -1,5 +1,10 @@
 # build stage
 FROM node:lts-alpine as build-stage
+
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
+# ENV ENV=${NODE_ENV}
+
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
