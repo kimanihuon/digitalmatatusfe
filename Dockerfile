@@ -1,7 +1,7 @@
 # build stage
 FROM node:lts-alpine as build-stage
 
-ARG NODE_ENV=development
+ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
 ENV ENV=production
 
