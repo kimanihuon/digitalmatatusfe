@@ -149,8 +149,6 @@
 
 
 <script>
-// It can also be imported as { GoogleLogin }
-import GoogleLogin from "vue-google-login";
 
 export default {
   name: "login",
@@ -158,7 +156,7 @@ export default {
   props: ["contribution"],
 
   components: {
-    GoogleLogin
+    'GoogleLogin': () => import(/* webpackChunkName: "GoogleLogin" */ "vue-google-login")
   },
 
   metaInfo() {

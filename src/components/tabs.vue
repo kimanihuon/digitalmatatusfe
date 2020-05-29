@@ -30,7 +30,6 @@
 </template>
 
 <script>
-import points from "@/components/points";
 
 function updateFaresCache(list, instance) {
   for (let i = 0; i < list.length; i++) {
@@ -45,7 +44,7 @@ function updateFaresCache(list, instance) {
 export default {
   props: ["route"],
   components: {
-    points
+    'points': () => import(/* webpackChunkName: "points" */ "@/components/points")
   },
   data() {
     return {
@@ -92,7 +91,7 @@ export default {
           stops: [],
           stop_times: [],
           total_stops: 0,
-          start_point: instance.route.trips[start_point],
+          start_point: instance.route.trips[start_point]
         };
       }
 
@@ -107,7 +106,8 @@ export default {
             instance.trips[direction].stop_times.push(
               ...response.data.info.stop_times
             );
-            instance.trips[direction].total_stops = response.data.info.total_stops;
+            instance.trips[direction].total_stops =
+              response.data.info.total_stops;
 
             updateFaresCache(response.data.info.fares, instance);
             $state.loaded();
@@ -127,7 +127,6 @@ export default {
         this.current_period = state.periods.tags[state.periods.selection];
       }
     });
-
   }
 };
 </script>

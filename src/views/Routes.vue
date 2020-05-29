@@ -51,10 +51,6 @@
 </template>
 
 <script>
-import block from "@/components/block";
-import chips from "@/components/chips";
-import tabs from "@/components/tabs";
-import progressIndicator from "@/components/circularIndicator";
 
 function fetch_routes(instance) {
   // Remember to include the last foward slash
@@ -93,10 +89,10 @@ export default {
   },
 
   components: {
-    block,
-    chips,
-    tabs,
-    progressIndicator
+    'block': () => import(/* webpackChunkName: "block" */ "@/components/block"),
+    'chips': () => import(/* webpackChunkName: "chips" */ "@/components/chips"),
+    'tabs': () => import(/* webpackChunkName: "tabs" */ "@/components/tabs"),
+    'progressIndicator': () => import(/* webpackChunkName: "progressIndicator" */ "@/components/circularIndicator"),
   },
 
   data() {

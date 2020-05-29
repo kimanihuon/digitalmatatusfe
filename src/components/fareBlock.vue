@@ -96,8 +96,6 @@
 </template>
 
 <script>
-import login from "@/components/login";
-import loader from "@/components/circularIndicator";
 
 function submitContribution(instance, submitionValue) {
   instance.$http
@@ -132,8 +130,8 @@ export default {
   props: ["stop_id", "fare", "route_id", "start_point_id", "period"],
 
   components: {
-    login,
-    loader
+    'login': () => import(/* webpackChunkName: "login" */ "@/components/login"),
+    'loader': () => import(/* webpackChunkName: "progressIndicator" */ "@/components/circularIndicator"),
   },
 
   data() {

@@ -8,11 +8,10 @@
 </template>
 
 <script>
-import Nav from "./components/nav";
 
 export default {
   components: {
-    Nav
+    'Nav': () => import(/* webpackChunkName: "Nav" */ "./components/nav")
   }
 };
 </script>
