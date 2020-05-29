@@ -149,14 +149,14 @@
 
 
 <script>
-
 export default {
   name: "login",
 
   props: ["contribution"],
 
   components: {
-    'GoogleLogin': () => import(/* webpackChunkName: "GoogleLogin" */ "vue-google-login")
+    GoogleLogin: () =>
+      import(/* webpackChunkName: "GoogleLogin" */ "vue-google-login")
   },
 
   metaInfo() {
@@ -271,14 +271,51 @@ export default {
     },
 
     onSuccess(googleUser) {
-      console.log(googleUser);
+      // console.log(googleUser);
 
       // This only gets the user information: id, name, imageUrl and email
-      console.log(googleUser.getBasicProfile());
+      // console.log(googleUser.getBasicProfile());
+
+      var userDetails = googleUser.getBasicProfile();
+
+      var instance = this;
+
+      this.$http
+        .create({ withCredentials: true })
+        .post(`${this.$auth}/api/googleAuth`, {
+          email: userDetails.Du,
+          name: userDetails.Bd,
+          avatar: userDetails.SK,
+        })
+        .then(
+          response => {
+            instance.registerLoading = false;
+            instance.requestSuccess = response.data.success;
+            instance.requestResponse = response.data.message;
+
+            if (response.data.success) {
+              instance.$store.commit("switchAuth", true);
+              instance.$store.commit("setUserDetails", response.data.user);
+
+              if (instance.contribution) {
+                instance.$emit("success", true);
+              }
+            }
+          },
+          err => {
+            instance.registerLoading = false;
+            instance.requestSuccess = false;
+            instance.requestResponse = "Server error occurred";
+            instance.dialog = true;
+            instance.$emit("success", false);
+            console.log(err);
+          }
+        );
     },
 
     onFailure(fail) {
       console.log(fail);
+      this.$emit("success", false);
     },
 
     register() {
@@ -311,7 +348,7 @@ export default {
             if (response.data.success) {
               instance.$store.commit("switchAuth", true);
               instance.$store.commit("setUserDetails", response.data.user);
-              
+
               if (instance.contribution) {
                 instance.$emit("success", true);
               }

@@ -115,7 +115,7 @@
               <v-hover>
                 <template v-slot:default="{ hover }">
                   <v-avatar class="profile mt-4" color="grey" size="150">
-                    <v-img src="@/assets/user.svg"></v-img>
+                    <v-img :src="avatar ? avatar : require('@/assets/user.svg')"></v-img>
                     <v-fade-transition>
                       <v-overlay v-if="hover" absolute color="#036358">
                         <!-- Implement picture upload -->
@@ -173,6 +173,9 @@ export default {
         : "",
       phone: this.$store.state.userDetails.phone
         ? JSON.parse(JSON.stringify(this.$store.state.userDetails.phone))
+        : "",
+      avatar: this.$store.state.userDetails.avatar
+        ? JSON.parse(JSON.stringify(this.$store.state.userDetails.avatar))
         : "",
       tagline: this.$store.state.userDetails.tagline
         ? JSON.parse(JSON.stringify(this.$store.state.userDetails.tagline))
@@ -247,7 +250,13 @@ export default {
     }
   },
   mounted() {
-    // console.log(this.$store.state.userDetails);
+    console.log(this.$store.state.userDetails);
+    this.$store.subscribe((mutation, state) => {
+      if (mutation.type === "switchAuth") {
+        state;
+        this.auth = this.$store.state.auth;
+      }
+    });
   }
 };
 </script>
