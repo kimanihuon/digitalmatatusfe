@@ -51,10 +51,10 @@
 </template>
 
 <script>
-import block from "../components/block";
-import chips from "../components/chips";
-import tabs from "../components/tabs";
-import progressIndicator from "../components/circularIndicator";
+import block from "@/components/block";
+import chips from "@/components/chips";
+import tabs from "@/components/tabs";
+import progressIndicator from "@/components/circularIndicator";
 
 function fetch_routes(instance) {
   // Remember to include the last foward slash

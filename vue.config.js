@@ -1,8 +1,11 @@
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin;
 
+const CompressionPlugin = require('compression-webpack-plugin')
+
 module.exports = {
   "configureWebpack": {
+    plugins: [ new CompressionPlugin, new BundleAnalyzerPlugin ],
     optimization: {
       runtimeChunk: 'single',
       splitChunks: {
@@ -24,7 +27,7 @@ module.exports = {
   },
   pluginOptions: {
     webpackBundleAnalyzer: {
-      openAnalyzer: false
+      openAnalyzer: true
     }
   },
   "transpileDependencies": [

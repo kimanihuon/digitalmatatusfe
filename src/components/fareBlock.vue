@@ -96,8 +96,8 @@
 </template>
 
 <script>
-import login from "../components/login";
-import loader from "./circularIndicator";
+import login from "@/components/login";
+import loader from "@/components/circularIndicator";
 
 function submitContribution(instance, submitionValue) {
   instance.$http

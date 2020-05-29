@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import fare from "./fareBlock"
+import fare from "@/components/fareBlock"
 
 export default {
   props: ["start_point", "start_point_id", "stop", "fare", "route_id", "period"],

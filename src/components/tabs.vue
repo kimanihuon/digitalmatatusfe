@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import points from "./points";
+import points from "@/components/points";
 
 function updateFaresCache(list, instance) {
   for (let i = 0; i < list.length; i++) {
