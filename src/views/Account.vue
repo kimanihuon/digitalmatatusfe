@@ -250,7 +250,7 @@ export default {
     }
   },
   mounted() {
-    console.log(this.$store.state.userDetails);
+    // console.log(this.$store.state.userDetails);
     this.$store.subscribe((mutation, state) => {
       if (mutation.type === "switchAuth") {
         state;
