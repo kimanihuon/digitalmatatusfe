@@ -2,19 +2,25 @@
   <v-app>
     <v-content>
       <Nav />
-      <router-view />
+      <transition
+        name="router-anim"
+        enter-active-class="animated fadeInDown"
+        leave-active-class="animated fadeOutDown"
+      >
+        <router-view />
+      </transition>
     </v-content>
   </v-app>
 </template>
 
 <script>
-
 export default {
   components: {
-    'Nav': () => import(/* webpackChunkName: "Nav" */ "./components/nav")
+    Nav: () => import(/* webpackChunkName: "Nav" */ "./components/nav")
   }
 };
 </script>
 
 <style>
+@import "https://cdn.jsdelivr.net/npm/animate.css@3.5.1";
 </style>
