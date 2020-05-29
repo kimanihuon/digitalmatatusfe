@@ -51,9 +51,6 @@
 </template>
 
 <script>
-import block from "@/components/block";
-import chips from "@/components/chips";
-import tabs from "@/components/tabs";
 import progressIndicator from "@/components/circularIndicator";
 
 function fetch_routes(instance) {
@@ -93,10 +90,10 @@ export default {
   },
 
   components: {
-    block,
-    chips,
-    tabs,
-    progressIndicator
+    block: import(/* webpackChunkName: "block" */ '../components/block.vue'),
+    chips: import(/* webpackChunkName: "chips" */ '../components/chips.vue'),
+    tabs: import(/* webpackChunkName: "tabs" */ '../components/tabs.vue'),
+    progressIndicator,
   },
 
   data() {
