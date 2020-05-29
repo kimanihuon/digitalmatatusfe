@@ -8,10 +8,11 @@
 </template>
 
 <script>
+import Nav from "./components/nav";
 
 export default {
   components: {
-    Nav: import(/* webpackChunkName: "nav" */ './components/nav.vue')
+    Nav
   }
 };
 </script>
