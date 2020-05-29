@@ -5,7 +5,7 @@ const CompressionPlugin = require('compression-webpack-plugin')
 
 module.exports = {
   "configureWebpack": {
-    plugins: [ new CompressionPlugin, new BundleAnalyzerPlugin ],
+    plugins: [ new CompressionPlugin ],
     optimization: {
       runtimeChunk: 'single',
       splitChunks: {
@@ -24,11 +24,6 @@ module.exports = {
       },
     },
     // plugins: [new BundleAnalyzerPlugin()]
-  },
-  pluginOptions: {
-    webpackBundleAnalyzer: {
-      openAnalyzer: true
-    }
   },
   "transpileDependencies": [
     "vuetify"
