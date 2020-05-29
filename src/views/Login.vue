@@ -7,10 +7,11 @@
 </template>
 
 <script>
+import login from "@/components/login";
 
 export default {
   components: {
-    login: import(/* webpackChunkName: "loginComponent" */ '../components/login.vue')
+    login
   }
 };
 </script>

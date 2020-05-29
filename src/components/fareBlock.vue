@@ -96,6 +96,7 @@
 </template>
 
 <script>
+import login from "@/components/login";
 import loader from "@/components/circularIndicator";
 
 function submitContribution(instance, submitionValue) {
@@ -131,7 +132,7 @@ export default {
   props: ["stop_id", "fare", "route_id", "start_point_id", "period"],
 
   components: {
-    login: import(/* webpackChunkName: "loginComponent" */ './login.vue'),
+    login,
     loader
   },
 

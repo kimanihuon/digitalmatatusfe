@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import points from "@/components/points";
 
 function updateFaresCache(list, instance) {
   for (let i = 0; i < list.length; i++) {
@@ -44,7 +45,7 @@ function updateFaresCache(list, instance) {
 export default {
   props: ["route"],
   components: {
-    points:  import(/* webpackChunkName: "pointsBlock" */ './points.vue')
+    points
   },
   data() {
     return {
