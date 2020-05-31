@@ -3,19 +3,7 @@
     <!-- Dialog elements -->
     <v-row no-gutters v-if="dialog">
       <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
-        <v-toolbar dense dark :color="main_color">
-          <v-btn icon dark @click="dialog = false">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-          <v-toolbar-title>{{ active_route.route_short_name}} | {{ active_route.route_long_name }}</v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-toolbar-items></v-toolbar-items>
-        </v-toolbar>
-        <v-card>
-          <chips />
-          <progressIndicator v-if="fetching_trips" />
-          <tabs v-if="trips_fetch_success && !fetching_trips" :route="active_route" />
-        </v-card>
+        <router-view @closeDialog="closeDialog()"/>
       </v-dialog>
     </v-row>
 
@@ -30,7 +18,7 @@
         md="4"
         lg="3"
       >
-        <block :route="route" @activate="popup(...arguments, idx, page_number)"></block>
+        <block :route="route" @activate="popup(...arguments)"></block>
       </v-col>
     </v-row>
 
@@ -74,7 +62,7 @@ function fetch_routes(instance) {
 }
 
 export default {
-  name: "Home",
+  name: "routes",
 
   metaInfo() {
     return {
@@ -90,9 +78,9 @@ export default {
 
   components: {
     'block': () => import(/* webpackChunkName: "block" */ "@/components/block"),
-    'chips': () => import(/* webpackChunkName: "chips" */ "@/components/chips"),
-    'tabs': () => import(/* webpackChunkName: "tabs" */ "@/components/tabs"),
-    'progressIndicator': () => import(/* webpackChunkName: "progressIndicator" */ "@/components/circularIndicator"),
+    // 'chips': () => import(/* webpackChunkName: "chips" */ "@/components/chips"),
+    // 'tabs': () => import(/* webpackChunkName: "tabs" */ "@/components/tabs"),
+    // 'progressIndicator': () => import(/* webpackChunkName: "progressIndicator" */ "@/components/circularIndicator"),
   },
 
   data() {
@@ -109,52 +97,32 @@ export default {
     };
   },
   methods: {
-    popup(args, idx, page_number) {
-      this.active_route = args;
+    popup(args) {
+      args.page = this.page;
+      args.page_count = this.page_count;
       this.dialog = true;
-      this.fetch_trips(args, idx, page_number);
-    },
-    fetch_trips(active_route, idx, page_number) {
-      var instance = this;
-      this.fetching_trips = true;
-      this.trips_fetch_success = false;
-
-      if (!active_route.trips) {
-        this.$http
-          .get(`${this.$url}/api/trips?route_id=${active_route.route_id}`)
-          .then(function(response) {
-            instance.$store.commit("updateRoute", {
-              page_number: page_number,
-              block_index: idx,
-              data: response.data.info.trips
-            });
-            console.log("Trips Received successfully");
-            instance.fetching_trips = false;
-            instance.trips_fetch_success = true;
-          })
-          .catch(error => {
-            instance.fetching_trips = false;
-            console.log(error);
-          });
-      } else {
-        instance.trips_fetch_success = true;
-        this.fetching_trips = false;
-      }
+      this.$router.push({ path: `/routes/${args.route_short_name}`, query: args })
     },
     pagination(number) {
+
+      this.$router.push({ path: '/routes', query: { page: number, page_count: this.page_count } })
 
       // If the route hasn't already been fetched
       if (!this.$store.state.gtfs.routes[`p${number}`]) {
         fetch_routes(this);
         console.log(`Page: ${number} fetched successfully`);
       } else {
-        // The page will switch immediately but page_number ...
+       // The page will switch immediately but page_number ...
         // ... will wait until the routes have been fetched
         this.page_number = this.page;
       }
+
     },
     log(number) {
       console.log(number);
+    },
+    closeDialog(){
+      this.dialog = false;
     }
   },
   computed: {
@@ -166,6 +134,10 @@ export default {
     }
   },
   mounted() {
+
+    this.page = this.$route.query.page ? parseInt(this.$route.query.page) : 1;
+    this.page_count = this.$route.query.page_count ? parseInt(this.$route.query.page_count) : 10;
+
     // Watch for when the Api response is received
     this.$store.subscribe((mutation, state) => {
       if (mutation.type === "addRoutes") {
@@ -177,7 +149,13 @@ export default {
     });
 
     fetch_routes(this);
-  }
+
+    if (this.$route.params.route_id && this.$route.query.route_id) {
+      this.dialog = true;
+    }
+
+  },
+
 };
 </script>
 

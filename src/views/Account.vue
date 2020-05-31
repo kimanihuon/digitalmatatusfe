@@ -148,6 +148,8 @@
 
 <script>
 export default {
+  name: "account",
+
   metaInfo() {
     return {
       title: "Profile",

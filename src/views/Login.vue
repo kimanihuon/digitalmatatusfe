@@ -9,6 +9,7 @@
 <script>
 
 export default {
+  name: "Login",
   components: {
     'login': () => import(/* webpackChunkName: "login" */ "@/components/login")
   }

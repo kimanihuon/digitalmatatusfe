@@ -29,7 +29,8 @@ export default {
   },
   methods: {
     clicked() {
-      this.$emit('activate', this.route)
+      this.$emit('activate', this.route);
+      // this.$router.push({ name: 'single_route', params: {route_id: 1 } })
     }
   }
 };

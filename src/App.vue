@@ -17,6 +17,18 @@
 export default {
   components: {
     Nav: () => import(/* webpackChunkName: "Nav" */ "./components/nav")
+  },
+  data() {
+    return {
+      darkmode: false
+    }
+  },
+  mounted(){
+    this.$store.subscribe((mutation, state) => {
+      if (mutation.type === "switchTheme") {
+        this.$vuetify.theme.dark = state.darkmode;
+      }
+    });
   }
 };
 </script>

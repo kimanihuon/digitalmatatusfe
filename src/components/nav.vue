@@ -1,12 +1,13 @@
 <template>
   <div>
+    <!-- Logout dialog -->
     <v-dialog v-model="dialog" max-width="290">
       <v-card>
         <v-card-text v-if="!logoutSuccess" class="pt-4 red--text" title>
           Ooops! Something happened. Please try again.
           Error: {{ requestResponse }}
         </v-card-text>
-      
+
         <v-card-subtitle v-if="logoutSuccess" class="pt-4 green--text title">
           Logout successfull.
           See you soon!!!!
@@ -25,6 +26,13 @@
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
       <v-toolbar-title>Digimatt</v-toolbar-title>
+
+      <v-spacer></v-spacer>
+      <div >
+        <v-btn icon @click="switchTheme">
+          <v-icon> {{ darkmode ? lightOnIcon : lightOffIcon }} </v-icon>
+        </v-btn>
+      </div>
     </v-app-bar>
 
     <v-navigation-drawer v-model="drawer" app clipped>
@@ -55,8 +63,11 @@ export default {
   data: () => ({
     drawer: false,
     dialog: false,
+    lightOnIcon: "mdi-lightbulb-on",
+    lightOffIcon: "mdi-lightbulb-off",
     requestResponse: "",
-    logoutSuccess: false
+    logoutSuccess: false,
+    darkmode: false
   }),
   computed: {
     pages() {
@@ -92,9 +103,20 @@ export default {
           error;
           this.dialog = true;
           instance.logoutSuccess = false;
-          this.requestResponse = "Cannot logout, Browser error. Try clearing your cookies instead";
+          this.requestResponse =
+            "Cannot logout, Browser error. Try clearing your cookies instead";
         });
+    },
+    switchTheme(){
+      this.$store.commit("switchTheme")
     }
+  },
+  mounted() {
+    this.$store.subscribe((mutation, state) => {
+      if (mutation.type === "switchTheme") {
+        this.darkmode = state.darkmode
+      }
+    });
   }
 };
 </script>

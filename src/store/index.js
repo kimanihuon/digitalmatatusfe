@@ -5,6 +5,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   strict: true,
+  darkmode: false,
   state: {
     userDetails: {},
     pages: [
@@ -22,7 +23,6 @@ export default new Vuex.Store({
     periods: {
       selection: 6,
       tags: [
-        "Current Time",
         "6:00-7:00",
         "7:00-8:00",
         "8:00-9:00",
@@ -44,9 +44,6 @@ export default new Vuex.Store({
       state.gtfs.routes[payload.page] = payload.data;
       state.gtfs.total_routes = payload.total;
     },
-    updateRoute(state, route) {
-      state.gtfs.routes[`p${route.page_number}`][route.block_index].trips = route.data;
-    },
     updateSelection(state, value) {
       state.periods.selection = value
     },
@@ -61,6 +58,9 @@ export default new Vuex.Store({
     },
     switchAuth(state, value) {
       state.auth = value;
+    },
+    switchTheme(state){
+      state.darkmode = !state.darkmode;
     }
   },
   actions: {},

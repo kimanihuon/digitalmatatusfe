@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import VueMeta from 'vue-meta'
+// import SingleRoute from "../views/SingleRoute"
 
 Vue.use(VueMeta, {
   keyName: 'metaInfo',
@@ -9,30 +10,39 @@ Vue.use(VueMeta, {
 
 Vue.use(VueRouter)
 
-  const routes = [
+const routes = [
   {
     path: '/',
-    name: 'Home',
+    name: 'home',
     // route level code-splitting
     component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue')
   },
   {
     path: '/about',
-    name: 'About',
+    name: 'about',
     // route level code-splitting
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
 
   {
+    name: 'routes',
     path: '/routes',
-    name: 'Routes',
     component: () => import(/* webpackChunkName: "routes" */ '../views/Routes.vue'),
-    props: true
+    children: [
+      {
+        name: 'single_route',
+        path: '/routes/:route_short_name',
+        component: () => import(/* webpackChunkName: "routes" */ '../views/SingleRoute.vue'),
+        props: true
+      },
+    ]
   },
+
+
 
   {
     path: '/account',
-    name: 'Account',
+    name: 'account',
     component: () => import(/* webpackChunkName: "account" */ '../views/Account.vue')
   },
 
@@ -50,6 +60,10 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   saveScrollPosition: true,
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  next()
 })
 
 export default router
