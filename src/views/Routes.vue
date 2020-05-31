@@ -3,7 +3,7 @@
     <!-- Dialog elements -->
     <v-row no-gutters v-if="dialog">
       <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
-        <router-view @closeDialog="closeDialog()"/>
+        <router-view @closeDialog="closeDialog()" />
       </v-dialog>
     </v-row>
 
@@ -39,7 +39,6 @@
 </template>
 
 <script>
-
 function fetch_routes(instance) {
   // Remember to include the last foward slash
   instance.$http
@@ -47,14 +46,18 @@ function fetch_routes(instance) {
       `${instance.$url}/api/routes?page=${instance.page}&page_count=${instance.page_count}`
     )
     .then(function(response) {
-      response.data.info.routes.total = response.data.info.total;
-      instance.$store.commit("addRoutes", {
-        page: `p${instance.page}`,
-        data: response.data.info.routes,
-        total: response.data.info.total
-      });
-      instance.page_number = instance.page;
-      console.log("Routes Received successfully");
+      if (response.data.success) {
+        response.data.info.routes.total = response.data.info.total;
+        instance.$store.commit("addRoutes", {
+          page: `p${instance.page}`,
+          data: response.data.info.routes,
+          total: response.data.info.total
+        });
+        instance.page_number = instance.page;
+        console.log("Routes Received successfully");
+      } else {
+        // TODO: Add error handler
+      }
     })
     .catch(error => {
       console.log(error);
@@ -77,10 +80,7 @@ export default {
   },
 
   components: {
-    'block': () => import(/* webpackChunkName: "block" */ "@/components/block"),
-    // 'chips': () => import(/* webpackChunkName: "chips" */ "@/components/chips"),
-    // 'tabs': () => import(/* webpackChunkName: "tabs" */ "@/components/tabs"),
-    // 'progressIndicator': () => import(/* webpackChunkName: "progressIndicator" */ "@/components/circularIndicator"),
+    block: () => import(/* webpackChunkName: "block" */ "@/components/block")
   },
 
   data() {
@@ -93,6 +93,8 @@ export default {
       active_route: {},
       trips_fetch_success: false,
       trips_fetch_failed: false,
+      routes_fetch_success: false,
+      routes_fetch_failed: false,
       fetching_trips: false
     };
   },
@@ -101,27 +103,31 @@ export default {
       args.page = this.page;
       args.page_count = this.page_count;
       this.dialog = true;
-      this.$router.push({ path: `/routes/${args.route_short_name}`, query: args })
+      this.$router.push({
+        path: `/routes/${args.route_short_name}`,
+        query: args
+      });
     },
     pagination(number) {
-
-      this.$router.push({ path: '/routes', query: { page: number, page_count: this.page_count } })
+      this.$router.push({
+        path: "/routes",
+        query: { page: number, page_count: this.page_count }
+      });
 
       // If the route hasn't already been fetched
       if (!this.$store.state.gtfs.routes[`p${number}`]) {
         fetch_routes(this);
         console.log(`Page: ${number} fetched successfully`);
       } else {
-       // The page will switch immediately but page_number ...
+        // The page will switch immediately but page_number ...
         // ... will wait until the routes have been fetched
         this.page_number = this.page;
       }
-
     },
     log(number) {
       console.log(number);
     },
-    closeDialog(){
+    closeDialog() {
       this.dialog = false;
     }
   },
@@ -134,9 +140,10 @@ export default {
     }
   },
   mounted() {
-
     this.page = this.$route.query.page ? parseInt(this.$route.query.page) : 1;
-    this.page_count = this.$route.query.page_count ? parseInt(this.$route.query.page_count) : 10;
+    this.page_count = this.$route.query.page_count
+      ? parseInt(this.$route.query.page_count)
+      : 10;
 
     // Watch for when the Api response is received
     this.$store.subscribe((mutation, state) => {
@@ -150,12 +157,10 @@ export default {
 
     fetch_routes(this);
 
-    if (this.$route.params.route_id && this.$route.query.route_id) {
+    if (this.$route.query.route_id) {
       this.dialog = true;
     }
-
-  },
-
+  }
 };
 </script>
 

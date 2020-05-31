@@ -18,7 +18,8 @@ export default new Vuex.Store({
     page_count: 10,
     pages_fetched: {},
     gtfs: {
-      routes: {}
+      routes: {},
+      favourites: []
     },
     periods: {
       selection: 6,
@@ -43,6 +44,9 @@ export default new Vuex.Store({
       state.gtfs.routes[payload.page] = [];
       state.gtfs.routes[payload.page] = payload.data;
       state.gtfs.total_routes = payload.total;
+    },
+    addFavourites(state, payload){
+      state.gtfs.favourites = payload.data;
     },
     updateSelection(state, value) {
       state.periods.selection = value
