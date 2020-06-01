@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card color="#1F7087" dark class="ma-2">
+    <v-card color="#1F7087" dark class="ma-2" elevation="5">
       <v-card-title class="headline">{{ route.route_short_name }}</v-card-title>
 
       <v-card-subtitle class="pb-0">{{ route.route_long_name }}</v-card-subtitle>

@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-content>
+    <v-content class="bak">
       <Nav />
       <transition
         name="router-anim"
@@ -33,6 +33,10 @@ export default {
 };
 </script>
 
-<style>
+
+<style scoped>
 @import "https://cdn.jsdelivr.net/npm/animate.css@3.5.1";
+.bak{
+  background-color: rgba(151, 152, 153, 0.3);
+}
 </style>

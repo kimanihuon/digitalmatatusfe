@@ -1,45 +1,36 @@
 <template>
-  <v-container :class="fetching ? 'fill-height' : ''">
-    <!-- Loader -->
-    <v-row no-gutters v-if="fetching" >
-      <v-col justify="center" align="center">
+  <v-container fluid>
+    <!-- Favourites -->
+    <v-row no-gutters>
+      <!-- Loader -->
+      <v-col justify="center" align="center" v-if="fetching_favourites">
         <v-progress-circular :size="70" :width="7" color="purple" indeterminate></v-progress-circular>
         <p class="py-4">Fetching ...</p>
       </v-col>
+
+      <!-- Favourites -->
+      <v-col cols="12" v-if="!fetching_favourites">
+        <favourites :routes="favouriteRoutes" />
+      </v-col>
     </v-row>
 
-    <!-- Favourites -->
-    <v-row no-gutters v-if="!fetching">
-      <v-col cols="12">
-        <favourites :routes="favouriteRoutes" />
+    <!-- Stats -->
+    <v-row>
+      <!-- Loader -->
+      <v-col justify="center" align="center" v-if="fetching_stats">
+        <v-progress-circular :size="70" :width="7" color="purple" indeterminate></v-progress-circular>
+        <p class="py-4">Fetching ...</p>
+      </v-col>
+
+      <!-- Stats -->
+      <v-col cols="12" v-if="!fetching_stats">
+        <stats />
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
-function fetch_favourites(instance) {
-  instance.fetching = true;
-  instance.$http
-    .get(`${instance.$url}/api/routes?page=3&page_count=10`)
-    .then(function(response) {
-      if (response.data.success) {
-        instance.$store.commit("addFavourites", {
-          data: response.data.info.routes
-        });
-
-        instance.fetching = false;
-        console.log("Favourites Received successfully");
-      } else {
-        // TODO: Add error handler
-      }
-    })
-    .catch(error => {
-      instance.fetching = false;
-      console.log(error);
-    });
-}
-
 function get_location(navigator) {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
@@ -55,12 +46,85 @@ function get_location(navigator) {
   }
 }
 
+function fetch_favourites(instance) {
+  instance.fetching_favourites = true;
+  instance.$http
+    .get(`${instance.$url}/api/routes?page=3&page_count=10`)
+    .then(function(response) {
+      if (response.data.success) {
+        instance.$store.commit("addFavourites", {
+          data: response.data.info.routes
+        });
+
+        instance.fetching_favourites = false;
+        console.log("Favourites Received successfully");
+      } else {
+        // TODO: Add error handler
+      }
+    })
+    .catch(error => {
+      instance.fetching_favourites = false;
+      console.log(error);
+    });
+}
+
+function fetch_contribution_stats(instance, auth) {
+  var destination = auth ? "verifiedUserstats" : "generalstats";
+
+  instance.fetching_stats = true;
+  instance.$http
+    .create({ withCredentials: true })
+    .get(`${instance.$auth}/api/${destination}`)
+    .then(function(response) {
+      if (response.data.success) {
+        instance.$store.commit("updateStats", {
+          type: 'contributions',
+          data: response.data.stats
+        });
+
+        instance.fetching_stats = false;
+        console.log("Contribution stats Received successfully");
+      } else {
+        console.log(response.data.message);
+        // TODO: Add error handler
+      }
+    })
+    .catch(error => {
+      instance.fetching_favourites = false;
+      console.log(error);
+    });
+}
+
+function fetch_route_stats(instance) {
+  instance.fetching_route_stats = true;
+  instance.$http
+    .get(`${instance.$url}/api/stats`)
+    .then(function(response) {
+      if (response.data.success) {
+        instance.$store.commit("updateStats", {
+          type: 'routes',
+          data: response.data.info
+        });
+
+        instance.fetching_route_stats = false;
+        console.log("Route and Stop stats Received successfully");
+      } else {
+
+        // TODO: Add error handler
+      }
+    })
+    .catch(error => {
+      instance.fetching_route_stats = false;
+      console.log(error);
+    });
+}
+
 export default {
   name: "home",
 
   components: {
-    favourites: () =>
-      import(/* webpackChunkName: "favourites" */ "@/components/favourites")
+    favourites: () => import(/* webpackChunkName: "favourites" */ "@/components/favourites"),
+    stats: () => import(/* webpackChunkName: "stats" */ "@/components/stats")
   },
 
   metaInfo() {
@@ -79,9 +143,13 @@ export default {
       location: null,
       gettingLocation: false,
       errStr: null,
-      fetching: false,
+      fetching_stats: false,
+      fetching_stats_success: false,
+      fetching_favourites: false,
       fetch_favourites_success: false,
-      favouriteRoutes: this.$store.state.gtfs.favourites,
+      fetching_route_stats: false,
+      fetching_route_stats_success: false,
+      favouriteRoutes: this.$store.state.gtfs.favourites
     };
   },
 
@@ -93,6 +161,12 @@ export default {
     });
     get_location(navigator);
     fetch_favourites(this);
+    fetch_route_stats(this);
+    if (this.$store.state.auth) {
+      fetch_contribution_stats(this, true);
+    } else {
+      fetch_contribution_stats(this, false);
+    }
     // if (this.$store.state.auth) {
     //   fetch_favourites(this, this.$store.state.userDetails._id)
     // } else {
@@ -101,3 +175,11 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+
+/* .bak{
+  background-color: rgba(151, 152, 153, 0.3);
+} */
+
+</style>

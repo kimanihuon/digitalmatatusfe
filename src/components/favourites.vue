@@ -1,11 +1,11 @@
 <template>
-  <v-card class="mx-auto" elevation="10" max-width="1200">
+  <v-card outlined class="mx-auto" max-width="1200">
 
     <v-card-subtitle class="pa-0 px-4 pt-2"> Favourites </v-card-subtitle>
 
     <v-slide-group v-model="model" :show-arrows="true">
       <!-- Next Icon -->
-      <template v-slot:next>
+      <template v-slot:next class="px-0">
         <v-btn icon>
           <v-icon>mdi-chevron-right</v-icon>
         </v-btn>

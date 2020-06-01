@@ -8,6 +8,15 @@ export default new Vuex.Store({
   darkmode: false,
   state: {
     userDetails: {},
+    stats: {
+      contributions: {
+        total: 0
+      },
+      routes: {
+        total_routes: 0,
+        total_stops: 0
+      },
+    },
     pages: [
       { name: "Home", icon: "mdi-home", link: "/" },
       { name: "Routes", icon: "mdi-routes", link: "/routes" },
@@ -47,6 +56,14 @@ export default new Vuex.Store({
     },
     addFavourites(state, payload){
       state.gtfs.favourites = payload.data;
+    },
+    updateStats(state, payload){
+      if (payload.type == 'routes') {
+        state.stats.routes.total_stops = payload.data.total_stops;
+        state.stats.routes.total_routes = payload.data.total_routes;
+      } else if (payload.type == 'contributions') {
+        state.stats.contributions.total = payload.data.total_contributions
+      }
     },
     updateSelection(state, value) {
       state.periods.selection = value
