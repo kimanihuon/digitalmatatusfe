@@ -55,25 +55,27 @@
 
 <script>
 export default {
+  props: ["stats"],
+
   data() {
     return {
       model: [],
       summaries: [
         {
           title: "Routes",
-          data: { total: this.$store.state.stats.routes.total_routes },
+          data: { total: this.stats.routes.total_routes },
           icon: "mdi-routes",
           color: "#2196F3"
         },
         {
           title: "Stops",
-          data: { total: this.$store.state.stats.routes.total_stops },
+          data: { total: this.stats.routes.total_stops },
           icon: "mdi-bus-stop",
           color: "#795548"
         },
         {
           title: "Contributions",
-          data: { total: this.$store.state.stats.contributions.total },
+          data: { total: this.stats.contributions.total },
           icon: "mdi-handshake",
           color: "#FF9800"
         }
