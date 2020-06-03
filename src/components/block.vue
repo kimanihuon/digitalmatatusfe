@@ -5,11 +5,27 @@
 
       <v-card-subtitle class="pb-0">{{ route.route_long_name }}</v-card-subtitle>
 
-      <div class="px-4 pt-3">
+      <div class="px-4 py-2">
+        <v-divider></v-divider>
+      </div>
+      
+      <!-- Max fare -->
+      <v-row no-gutters align="center" class="pa-0 ma-0" >
+        <v-card-subtitle class="py-0 pr-0">MAX fare:</v-card-subtitle>
+        <v-card-title class="pa-0"> <span class="fare "> {{ route.max_fare }} </span></v-card-title>
+      </v-row>
+
+      <!-- Min fare -->
+      <v-row no-gutters align="center" >
+        <v-card-subtitle class="py-0 pr-0">MIN fare:</v-card-subtitle>
+        <v-card-title class="pa-0"> <span class="fare"> {{ route.min_fare }} </span></v-card-title>
+      </v-row>
+
+      <div class="px-4 pt-2">
         <v-divider></v-divider>
       </div>
 
-      <v-card-actions class="py-0 justify-end" align-center>
+      <v-card-actions class="py-0 justify-center" align-center>
         <v-btn icon @click="clicked()">
           <v-icon>
             mdi-eye-outline
@@ -35,3 +51,10 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.fare{
+  white-space: pre-wrap;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+</style>

@@ -28,6 +28,23 @@
         <v-card-subtitle v-if="!fetching_contrib_success || !fetching_rstats_success"> Failed fetching stats please try refreshing the page </v-card-subtitle>
       </v-col>
     </v-row>
+
+    <!-- Charts -->
+    <v-row>
+      <!-- Loader -->
+      <v-col justify="center" align="center" v-if="fetching_contrib_stats || fetching_route_stats">
+        <v-progress-circular :size="70" :width="7" color="purple" indeterminate></v-progress-circular>
+        <p class="py-4">Fetching ...</p>
+      </v-col>
+
+      <!-- Charts -->
+      <v-col cols="12" v-if="!fetching_contrib_stats && !fetching_route_stats">
+        <charts />
+        <v-card-subtitle v-if="!fetching_contrib_success || !fetching_rstats_success"> Failed fetching stats please try refreshing the page </v-card-subtitle>
+      </v-col>
+    </v-row>
+
+
   </v-container>
 </template>
 
@@ -127,7 +144,8 @@ export default {
 
   components: {
     favourites: () => import(/* webpackChunkName: "favourites" */ "@/components/favourites"),
-    stats: () => import(/* webpackChunkName: "stats" */ "@/components/stats")
+    stats: () => import(/* webpackChunkName: "stats" */ "@/components/stats"),
+    charts: () => import(/* webpackChunkName: "Charts" */ "@/components/charts")
   },
 
   metaInfo() {

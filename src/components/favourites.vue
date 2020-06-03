@@ -20,7 +20,7 @@
 
       <!-- Slide item -->
       <v-slide-item v-for="(route, i) in routes" :key="i"  v-slot:default="{ active, toggle }">
-        <v-card flat width="250" @click="toggle">
+        <v-card flat width="260" @click="toggle" class="pb-2">
           <block :route="route" @activate="popup(...arguments)"> </block>
         </v-card>
       </v-slide-item>

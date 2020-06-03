@@ -22,15 +22,30 @@
       </v-card>
     </v-dialog>
 
-    <v-app-bar app clipped-left dense :color="main_color" dark>
+    <v-app-bar app clipped-left :color="main_color" dark>
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
       <v-toolbar-title>Digimatt</v-toolbar-title>
 
       <v-spacer></v-spacer>
-      <div >
+
+      <v-btn class="ma-2" outlined to="/">
+        <v-icon>mdi-home</v-icon>
+      </v-btn>
+
+      <v-btn class="ma-2" outlined to="/routes">
+        <v-icon>mdi-routes</v-icon>
+      </v-btn>
+
+      <v-btn to="/account" class="ma-2" outlined>
+        <v-icon>mdi-account</v-icon>
+      </v-btn>
+
+      <v-spacer></v-spacer>
+
+      <div>
         <v-btn icon @click="switchTheme">
-          <v-icon> {{ darkmode ? lightOnIcon : lightOffIcon }} </v-icon>
+          <v-icon>{{ darkmode ? lightOnIcon : lightOffIcon }}</v-icon>
         </v-btn>
       </div>
     </v-app-bar>
@@ -107,14 +122,14 @@ export default {
             "Cannot logout, Browser error. Try clearing your cookies instead";
         });
     },
-    switchTheme(){
-      this.$store.commit("switchTheme")
+    switchTheme() {
+      this.$store.commit("switchTheme");
     }
   },
   mounted() {
     this.$store.subscribe((mutation, state) => {
       if (mutation.type === "switchTheme") {
-        this.darkmode = state.darkmode
+        this.darkmode = state.darkmode;
       }
     });
   }
