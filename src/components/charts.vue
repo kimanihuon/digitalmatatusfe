@@ -30,7 +30,7 @@
 
 <script>
 // Import chart js
-import Chart from "chart.js/dist/Chart";
+import Chart from "chart.js/dist/Chart.min.js";
 
 // Import Data handler
 import Data from "../controllers/chart-data";

@@ -145,7 +145,7 @@ export default {
   components: {
     favourites: () => import(/* webpackChunkName: "favourites" */ "@/components/favourites"),
     stats: () => import(/* webpackChunkName: "stats" */ "@/components/stats"),
-    charts: () => import(/* webpackChunkName: "Charts" */ "@/components/charts")
+    charts: () => import(/* webpackChunkName: "charts" */ "@/components/charts")
   },
 
   metaInfo() {
