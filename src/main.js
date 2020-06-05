@@ -14,7 +14,7 @@ Vue.prototype.$auth = (process.env.VUE_APP_ENV ? 'http://localhost:6443' : 'http
 Vue.prototype.$client_id = (process.env.VUE_APP_CLIENT_ID);
 Vue.prototype.$http = axios;
 Vue.config.productionTip = false;
-Vue.config.devtools=false
+Vue.config.devtools=false;
 
 Vue.prototype.$http.create({ withCredentials: true })
   .post(`${Vue.prototype.$auth}/api/login/verify`)

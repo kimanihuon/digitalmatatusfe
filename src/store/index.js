@@ -7,7 +7,9 @@ export default new Vuex.Store({
   strict: true,
   darkmode: false,
   state: {
+    current_tab: 0,
     userDetails: {},
+    fetching_fares: true,
     stats: {
       contributions: {
         total: 0
@@ -28,7 +30,8 @@ export default new Vuex.Store({
     pages_fetched: {},
     gtfs: {
       routes: {},
-      favourites: []
+      favourites: [],
+      fares: {}
     },
     periods: {
       selection: 6,
@@ -55,10 +58,13 @@ export default new Vuex.Store({
       state.gtfs.routes[payload.page] = payload.data;
       state.gtfs.total_routes = payload.total;
     },
-    addFavourites(state, payload){
+    addFavourites(state, payload) {
       state.gtfs.favourites = payload.data;
     },
-    updateStats(state, payload){
+    fetchingFares(state){
+      state.fetching_fares = true;
+    },
+    updateStats(state, payload) {
       if (payload.type == 'routes') {
         state.stats.routes.total_stops = payload.data.total_stops;
         state.stats.routes.total_routes = payload.data.total_routes;
@@ -66,8 +72,11 @@ export default new Vuex.Store({
         state.stats.contributions.total = payload.data.total_contributions
       }
     },
-    updateSelection(state, value) {
-      state.periods.selection = value
+    updateSelection(state, payload) {
+      state.periods.selection = payload
+    },
+    updateTab(state, payload){
+      state.current_tab = payload
     },
     updateProfile(state, payload) {
       state.userDetails.name = payload.name;
@@ -75,17 +84,31 @@ export default new Vuex.Store({
       state.userDetails.tagline = payload.tagline;
       state.userDetails.about = payload.about;
     },
+
+    updateFares(state, payload) {
+      // origin_id.period.destination_id
+      if (!state.gtfs.fares[payload.origin_id]) {
+        state.gtfs.fares[payload.origin_id] = {}
+      }
+      state.gtfs.fares[payload.origin_id][payload.period] = payload.fares
+
+      state.fetching_fares = false;
+
+    },
+
     setUserDetails(state, details) {
       state.userDetails = details;
     },
     switchAuth(state, value) {
       state.auth = value;
     },
-    switchTheme(state){
+    switchTheme(state) {
       state.darkmode = !state.darkmode;
     }
   },
   actions: {},
   modules: {},
-  getters: {}
+  getters: {
+    getFetchingFares: state => state.fetching_fares
+  }
 });

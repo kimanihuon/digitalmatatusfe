@@ -12,7 +12,7 @@
         <v-toolbar-items></v-toolbar-items>
       </v-toolbar>
       <v-card>
-        <chips />
+        <chips @update="update" />
         <progressIndicator v-if="fetching_trips" />
         <tabs v-if="trips_fetch_success && !fetching_trips" :route="activeMatatuRoute" />
       </v-card>
@@ -71,6 +71,9 @@ export default {
       // this.$router.go(-1)
       this.$router.push({ path: 'routes', query: { page: this.previousPageParams.page, page_count: this.previousPageParams.page_count } })
       this.$emit("closeDialog")
+    },
+    update(value){
+      this.$store.commit("updateSelection", value);
     }
   },
 

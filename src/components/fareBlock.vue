@@ -24,8 +24,14 @@
     <v-row justify="center">
       <v-dialog v-model="contributionDialog" persistent max-width="290">
         <v-card class="pa-2" v-if="contributionDialog">
-          <v-card-subtitle v-if="!sendingContribution && sentContribution" class="subtitle-1">Thank you for your submission. The fare will be reviewed and updated</v-card-subtitle>
-          <v-card-subtitle v-if="!sendingContribution && !sentContribution" class="subtitle-1 red--text"> Ooops !!! Something happened when submitting. Please try again </v-card-subtitle>
+          <v-card-subtitle
+            v-if="!sendingContribution && sentContribution"
+            class="subtitle-1"
+          >Thank you for your submission. The fare will be reviewed and updated</v-card-subtitle>
+          <v-card-subtitle
+            v-if="!sendingContribution && !sentContribution"
+            class="subtitle-1 red--text"
+          >Ooops !!! Something happened when submitting. Please try again</v-card-subtitle>
 
           <v-row no-gutters v-if="sendingContribution">
             <loader />
@@ -96,7 +102,6 @@
 </template>
 
 <script>
-
 function submitContribution(instance, submitionValue) {
   instance.$http
     .create({ withCredentials: true })
@@ -126,19 +131,32 @@ function submitContribution(instance, submitionValue) {
     );
 }
 
+function retrieve(instance) {
+  var fares = instance.$store.state.gtfs.fares[instance.start_point_id];
+  var periodFares = fares ? fares[instance.period] : null;
+  var stopFare = periodFares ? periodFares[instance.stop_id] : null;
+
+  return stopFare;
+}
+
 export default {
-  props: ["stop_id", "fare", "route_id", "start_point_id", "period"],
+  props: ["stop_id", "route_id", "start_point_id", "period"],
 
   components: {
-    'login': () => import(/* webpackChunkName: "login" */ "@/components/login"),
-    'loader': () => import(/* webpackChunkName: "progressIndicator" */ "@/components/circularIndicator"),
+    login: () => import(/* webpackChunkName: "login" */ "@/components/login"),
+    loader: () =>
+      import(
+        /* webpackChunkName: "progressIndicator" */ "@/components/circularIndicator"
+      )
   },
 
   data() {
+    var stopFare = retrieve(this);
+
     return {
       edit: false,
       changed: false,
-      val: this.fare ? this.fare.price : 0,
+      val: stopFare ? stopFare.price : 0,
       oldVal: 0,
       min: 0,
       max: 300,
@@ -150,6 +168,8 @@ export default {
       sentMessage: ""
     };
   },
+
+  computed: {},
 
   methods: {
     toggle() {
@@ -195,17 +215,14 @@ export default {
       }
     }
   },
-  mounted() {
-    // console.log(this.start_point_id)
-    // console.log(this.stop_id)
-    // console.log(this.fare)
-    // console.log(this.route_id)
-  },
+  mounted() {},
+
   watch: {
-    fare: {
-      deep: true,
-      handler(change) {
-        this.val = change ? change.price : 0;
+    "$store.state.fetching_fares": function() {
+      // When the fares have been fetched
+      if (!this.$store.state.fetching_fares) {
+        // Retrieve latest value
+        this.val = retrieve(this) ? retrieve(this).price : 0;
       }
     }
   }

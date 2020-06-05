@@ -15,7 +15,6 @@
                   :start_point="trips[`direction${trip.direction_id}`].start_point"
                   :start_point_id="trips[`direction${trip.direction_id}`].stops[0].stop_id"
                   :stop="stop"
-                  :fare="fare(stop.stop_id)"
                   :route_id="route.route_id"
                   :period="current_period"
                 />
@@ -30,25 +29,16 @@
 </template>
 
 <script>
-
-function updateFaresCache(list, instance) {
-  for (let i = 0; i < list.length; i++) {
-    var fare = {};
-    fare[list[i].destination_id] = list[i];
-    instance.periods[list[i].period] = fare;
-
-    instance.fares[list[i].destination_id] = list[i];
-  }
-}
+import Fare from "../controllers/fetchFares";
+var fetch_fares = new Fare();
 
 export default {
   props: ["route"],
   components: {
-    'points': () => import(/* webpackChunkName: "points" */ "@/components/points")
+    points: () => import(/* webpackChunkName: "points" */ "@/components/points")
   },
   data() {
     return {
-      tab: null,
       // Cached fares
       fares: {},
       periods: {},
@@ -59,39 +49,42 @@ export default {
         direction0: {},
         direction1: {}
       },
-      page_count: 10
+      page_count: 10,
+      fetched_direction0_stops: false,
+      fetched_direction1_stops: false
     };
   },
-  computed: {},
-  methods: {
-    fare(stop_id) {
-      var periodHasFares = this.periods[this.current_period];
-      // console.log(this.current_period);
-      if (periodHasFares) {
-        return periodHasFares[stop_id];
-      } else {
-        return;
+  computed: {
+    tab: {
+      get() {
+        return this.$store.state.current_tab;
+      },
+      set(value) {
+        this.$store.commit("updateTab", value);
       }
     },
+  },
+  methods: {
     infiniteHandler($state, trip, trip_index) {
       var instance = this;
       var direction = trip.direction_id == "0" ? "direction0" : "direction1";
-      var start_point;
+      var direction_id;
 
       // Getting the trip start point
       if (trip_index == 0) {
-        start_point = 1;
+        direction_id = 1;
       } else {
-        start_point = 0;
+        direction_id = 0;
       }
 
+      // If we're not in the first page
       if (!(instance.trips[direction].page > 0)) {
         instance.trips[direction] = {
           page: 1,
           stops: [],
           stop_times: [],
           total_stops: 0,
-          start_point: instance.route.trips[start_point]
+          start_point: instance.route.trips[direction_id]
         };
       }
 
@@ -109,7 +102,8 @@ export default {
             instance.trips[direction].total_stops =
               response.data.info.total_stops;
 
-            updateFaresCache(response.data.info.fares, instance);
+            // Fetched_directionX_stops = true
+            instance[`fetched_${direction}_stops`] = true;
             $state.loaded();
           } else {
             $state.complete();
@@ -125,8 +119,42 @@ export default {
     this.$store.subscribe((mutation, state) => {
       if (mutation.type === "updateSelection") {
         this.current_period = state.periods.tags[state.periods.selection];
+
+        fetch_fares.fetch(
+          this,
+          // this.trips.direction0.stops[0].stop_id,
+          this.trips[`direction${this.tab}`].stops[0].stop_id,
+          state.periods.tags[state.periods.selection]
+        );
       }
     });
+  },
+
+  watch: {
+    fetched_direction0_stops: {
+      deep: true,
+      handler(change) {
+        fetch_fares.fetch(
+          this,
+          this.trips.direction0.stops[0].stop_id,
+          this.current_period
+        );
+        // console.log('direction0')
+        change;
+      }
+    },
+    fetched_direction1_stops: {
+      deep: true,
+      handler(change) {
+        fetch_fares.fetch(
+          this,
+          this.trips.direction1.stops[0].stop_id,
+          this.current_period
+        );
+        // console.log('direction1')
+        change;
+      }
+    }
   }
 };
 </script>
