@@ -36,22 +36,22 @@ import Chart from "chart.js/dist/Chart.min.js";
 import Data from "../controllers/chart-data";
 
 // Initialize data
-var morningChartData = new Data(1, 'Daily distribution (Morning to midday)');
-var afternoonChartData = new Data(1, 'Daily distribution (Midday to evening)');
+var oneChartData = new Data(1, 'Weekly distribution (Route 1)');
+var twoChartData = new Data(1, 'Weekly distribution (Route 2)');
 
 // Get data
-morningChartData = morningChartData.chartData();
-afternoonChartData = afternoonChartData.chartData();
+oneChartData = oneChartData.datasetOne();
+twoChartData = twoChartData.datasetTwo();
 
 export default {
   data() {
     return {
-      morningChartData: morningChartData,
-      afternoonChartData: afternoonChartData,
+      oneChartData: oneChartData,
+      twoChartData: twoChartData,
       model: [],
       charts: [
-        { title: "Morning", source: "morningChartData" },
-        { title: "Afternoon", source: "afternoonChartData" }
+        { title: "Route 1", source: "oneChartData" },
+        { title: "Route 2", source: "twoChartData" }
       ]
     };
   },

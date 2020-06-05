@@ -5,17 +5,51 @@ class chartData {
         this.data = data;
     }
 
-    chartData() {
+    datasetOne() {
         return {
             type: 'line',
             data: {
-                labels: ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune'],
+                labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
                 datasets: [
                     { // another line graph
                         label: this.title,
-                        data: [4.8, 12.1, 12.7, 6.7, 139.8, 116.4, 50.7, 49.2],
+                        data: [100, 100, 80, 70, 80, 50, 50, 120],
                         backgroundColor: [
-                            'rgba(71, 183,132,.5)', // Green
+                            'rgba(183, 71, 71, 0.5)', // Green
+                        ],
+                        borderColor: [
+                            '#47b784',
+                        ],
+                        borderWidth: 3
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                lineTension: 1,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            padding: 25,
+                        }
+                    }]
+                }
+            }
+        }
+
+    }
+    datasetTwo() {
+        return {
+            type: 'line',
+            data: {
+                labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+                datasets: [
+                    { // another line graph
+                        label: this.title,
+                        data: [50, 80, 80, 70, 80, 50, 50, 120],
+                        backgroundColor: [
+                            'rgba(71, 79, 183, 0.5)', // Green
                         ],
                         borderColor: [
                             '#47b784',
