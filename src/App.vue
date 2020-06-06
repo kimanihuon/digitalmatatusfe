@@ -40,6 +40,7 @@ export default {
 
 .cash {
   font-family: 'Lobster', cursive;
+  font-size: 27px;
 }
 
 .bak{
