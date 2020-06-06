@@ -76,7 +76,6 @@ class chartData {
 }
 
 
-
 export default chartData
 
 // export { data }
