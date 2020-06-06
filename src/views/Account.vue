@@ -140,7 +140,7 @@
     <v-row v-if="!auth" no-gutters justify="center">
       <v-col align="center" justify="center">
         <v-img src="@/assets/hello.svg" width="300"></v-img>
-        <v-card-title class="justify-center">Please login or Sign up to view profile</v-card-title>
+        <v-card-title class="justify-center">Please Sign up or Login to view profile</v-card-title>
       </v-col>
     </v-row>
   </v-container>
