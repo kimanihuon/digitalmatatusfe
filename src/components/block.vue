@@ -12,13 +12,13 @@
       <!-- Max fare -->
       <v-row no-gutters align="center" class="pa-0 ma-0" >
         <v-card-subtitle class="py-0 pr-0">MAX fare:</v-card-subtitle>
-        <v-card-title class="pa-0"> <span class="fare "> {{ route.max_fare }} </span></v-card-title>
+        <v-card-title class="pa-0"> <span class="fare cash"> {{ route.max_fare }} </span></v-card-title>
       </v-row>
 
       <!-- Min fare -->
       <v-row no-gutters align="center" >
         <v-card-subtitle class="py-0 pr-0">MIN fare:</v-card-subtitle>
-        <v-card-title class="pa-0"> <span class="fare"> {{ route.min_fare }} </span></v-card-title>
+        <v-card-title class="pa-0"> <span class="fare cash"> {{ route.min_fare }} </span></v-card-title>
       </v-row>
 
       <div class="px-4 pt-2">
@@ -55,6 +55,5 @@ export default {
 <style scoped>
 .fare{
   white-space: pre-wrap;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 </style>

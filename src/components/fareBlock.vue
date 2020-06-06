@@ -64,7 +64,7 @@
         <!-- Field and icon align -->
         <v-row no-gutters align="start">
           <v-col cols="8">
-            <p v-if="!edit" class="headline">{{ val }}</p>
+            <p v-if="!edit" class="cash">{{ val }}</p>
             <v-text-field
               v-if="edit"
               :min="min"
@@ -229,7 +229,8 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+
 /* Chrome, Safari, Edge, Opera */
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
@@ -245,4 +246,5 @@ input[type="number"] {
 .cost {
   padding-top: 15px;
 }
+
 </style>

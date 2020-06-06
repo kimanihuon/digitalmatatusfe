@@ -34,8 +34,14 @@ export default {
 </script>
 
 
-<style scoped>
+<style>
 @import "https://cdn.jsdelivr.net/npm/animate.css@3.5.1";
+@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+
+.cash {
+  font-family: 'Lobster', cursive;
+}
+
 .bak{
   background-color: rgba(151, 152, 153, 0.3);
 }
