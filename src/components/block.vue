@@ -55,5 +55,6 @@ export default {
 <style scoped>
 .fare{
   white-space: pre-wrap;
+  font-size: 24px;
 }
 </style>
