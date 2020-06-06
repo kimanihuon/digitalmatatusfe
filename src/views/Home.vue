@@ -188,11 +188,14 @@ export default {
     get_location(navigator);
     fetch_favourites(this);
     fetch_route_stats(this);
-    if (this.$store.state.auth) {
-      fetch_contribution_stats(this, true);
-    } else {
-      fetch_contribution_stats(this, false);
-    }
+    // if (this.$store.state.auth) {
+    //   fetch_contribution_stats(this, true);
+    // } else {
+    //   fetch_contribution_stats(this, false);
+    // }
+
+    fetch_contribution_stats(this, false);
+
     // if (this.$store.state.auth) {
     //   fetch_favourites(this, this.$store.state.userDetails._id)
     // } else {
